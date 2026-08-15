@@ -1,0 +1,4 @@
+interface:
+  display_name: "Delta Bags"
+  short_description: "File Delta late-bag guarantee requests"
+  default_prompt: "Use $delta-bags to submit a 20-Minute Bag Guarantee Request for my recent Delta flight."

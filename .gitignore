@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Local agent-development dependencies are not part of the published skill.
+/.agents/
+/skills-lock.json
+
+# Runtime data belongs in platform-native per-user storage, never this repo.
+.delta-bags/
+profiles.json
+submissions.json
