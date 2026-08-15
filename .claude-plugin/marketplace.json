@@ -1,0 +1,31 @@
+{
+  "name": "delta-bags-skill",
+  "owner": {
+    "name": "Zinger",
+    "url": "https://github.com/thisiszinger"
+  },
+  "description": "The native Claude Code distribution for the Delta Bags skill.",
+  "plugins": [
+    {
+      "name": "delta-bags",
+      "displayName": "Delta Bags",
+      "source": "./",
+      "description": "Prepare, verify, and submit Delta Air Lines 20-Minute Bag Guarantee Requests.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Zinger",
+        "url": "https://github.com/thisiszinger"
+      },
+      "homepage": "https://github.com/thisiszinger/delta-bags-skill#readme",
+      "repository": "https://github.com/thisiszinger/delta-bags-skill",
+      "license": "MIT",
+      "category": "Travel",
+      "tags": [
+        "delta-air-lines",
+        "travel",
+        "baggage",
+        "skymiles"
+      ]
+    }
+  ]
+}

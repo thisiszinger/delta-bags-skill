@@ -18,17 +18,47 @@ The canonical portable skill is [skills/delta-bags](skills/delta-bags). It follo
 
 ## Install
 
-Clone this repository, then install or link the `skills/delta-bags` directory in a location your agent scans.
+Delta Bags is [listed on skills.sh](https://skills.sh/thisiszinger/delta-bags-skill/delta-bags). Install it with the cross-agent `skills` CLI; no clone or global CLI installation is required:
+
+```sh
+npx skills add thisiszinger/delta-bags-skill --skill delta-bags
+```
+
+The interactive installer detects supported agents and asks whether to install for the current project or for the current user. To install globally for both Claude Code and Codex without prompts, run:
+
+```sh
+npx skills add thisiszinger/delta-bags-skill --skill delta-bags --global --agent claude-code --agent codex --yes
+```
+
+Verify or update the global installation later with:
+
+```sh
+npx skills list --global
+npx skills update delta-bags --global --yes
+```
+
+For a project-only installation, omit `--global`. The installer writes the appropriate agent directories and records the source in `skills-lock.json` so updates remain traceable.
 
 ### ChatGPT and Codex
 
-For Codex, copy or symlink the skill to `~/.agents/skills/delta-bags` for personal use or `.agents/skills/delta-bags` inside another repository. Invoke it as `$delta-bags`, or describe a late Delta baggage delivery and allow implicit matching.
+The installer places the skill where Codex can discover it. Invoke it as `$delta-bags`, or describe a late Delta baggage delivery and allow implicit matching.
 
-Standalone skills are also supported by the ChatGPT desktop app. ChatGPT web and mobile distribution requires plugin packaging, which this beta does not claim to provide. See the official [ChatGPT and Codex skills documentation](https://learn.chatgpt.com/docs/build-skills).
+For a manual installation, copy or symlink `skills/delta-bags` to `~/.agents/skills/delta-bags` for personal use or `.agents/skills/delta-bags` inside a repository. Standalone skills are also supported by the ChatGPT desktop app. See the official [ChatGPT and Codex skills documentation](https://learn.chatgpt.com/docs/build-skills).
 
 ### Claude Code
 
-Copy or symlink the skill to `~/.claude/skills/delta-bags` for personal use or `.claude/skills/delta-bags` for a project. Invoke `/delta-bags` or use natural language. See [Claude Code skills](https://code.claude.com/docs/en/skills).
+The installer places the skill in Claude Code's skills directory. Invoke `/delta-bags` or use natural language.
+
+For a manual installation, copy or symlink `skills/delta-bags` to `~/.claude/skills/delta-bags` for personal use or `.claude/skills/delta-bags` for a project. See [Claude Code skills](https://code.claude.com/docs/en/skills).
+
+Claude Code users can alternatively install the native plugin directly from this repository:
+
+```sh
+claude plugin marketplace add thisiszinger/delta-bags-skill
+claude plugin install delta-bags@delta-bags-skill
+```
+
+The plugin-scoped invocation is `/delta-bags:delta-bags`; natural-language matching also works.
 
 ### Gemini CLI
 
@@ -46,6 +76,16 @@ Copy or symlink the directory to a supported project or user skills location. Cu
 
 - [Cursor Agent Skills](https://cursor.com/docs/skills)
 - [GitHub Copilot Agent Skills](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills)
+
+## Discovery and marketplaces
+
+- **skills.sh:** the public listing is live. There is no separate submission form; public installs through the `skills` CLI provide the anonymous aggregate data used for search and ranking.
+- **Claude:** `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` make the repository installable as a native Claude Code plugin today. A maintainer must still submit it through [Anthropic's plugin form](https://platform.claude.com/plugins/submit) for centralized discovery. Approval places it in the `claude-community` catalog; Anthropic curates its separate official catalog independently.
+- **ChatGPT and Codex:** `.codex-plugin/plugin.json` packages the same skill as an OpenAI skills-only plugin. A verified publisher must still submit the bundle, listing assets, policy URLs, prompts, and review tests through the [OpenAI plugin portal](https://platform.openai.com/plugins). Once approved and published, it appears in the shared ChatGPT and Codex Plugins Directory.
+
+The manifests are distribution wrappers only. They both point at the canonical `skills/` directory, so marketplace installs and direct skill installs use the same implementation.
+
+See [the distribution research](docs/research/skill-distribution-and-discovery.md) for the verified channel requirements, paths, and source links.
 
 ## Capability support
 

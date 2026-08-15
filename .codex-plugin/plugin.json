@@ -1,0 +1,33 @@
+{
+  "name": "delta-bags",
+  "version": "0.1.0",
+  "description": "Prepare, verify, and submit Delta Air Lines 20-Minute Bag Guarantee Requests.",
+  "author": {
+    "name": "Zinger",
+    "url": "https://github.com/thisiszinger"
+  },
+  "homepage": "https://github.com/thisiszinger/delta-bags-skill#readme",
+  "repository": "https://github.com/thisiszinger/delta-bags-skill",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "delta-air-lines",
+    "travel",
+    "baggage",
+    "skymiles"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Delta Bags",
+    "shortDescription": "Claim Delta's late-bag SkyMiles benefit",
+    "longDescription": "Find a recent Delta flight, verify the live 20-Minute Bag Guarantee terms, prepare requests for eligible travelers, and submit the public form after one confirmation.",
+    "developerName": "Zinger",
+    "category": "Travel",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/thisiszinger/delta-bags-skill",
+    "defaultPrompt": "My Delta bags were late today. Find my flight and file the 20-Minute Bag Guarantee Request."
+  }
+}

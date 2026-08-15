@@ -1,6 +1,7 @@
 ---
 name: delta-bags
 description: Prepare, verify, and submit Delta Air Lines 20-Minute Bag Guarantee Requests for late checked baggage. Use when someone says their Delta bags took more than 20 minutes, asks for the late-bag SkyMiles benefit, wants the Delta bag-guarantee form completed, needs requests submitted for traveling companions, or wants to manage reusable Delta Bags traveler profiles.
+license: MIT
 ---
 
 # Delta Bags
