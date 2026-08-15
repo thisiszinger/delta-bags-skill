@@ -53,6 +53,17 @@ def _format_timestamp(value: datetime) -> str:
     return value.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def _path_environment() -> dict[str, str]:
+    """Read only the non-secret environment variables used for state paths."""
+    values = {
+        "APPDATA": os.environ.get("APPDATA"),
+        "LOCALAPPDATA": os.environ.get("LOCALAPPDATA"),
+        "XDG_CONFIG_HOME": os.environ.get("XDG_CONFIG_HOME"),
+        "XDG_STATE_HOME": os.environ.get("XDG_STATE_HOME"),
+    }
+    return {key: value for key, value in values.items() if value is not None}
+
+
 def resolve_paths(
     *,
     config_dir: str | None = None,
@@ -64,7 +75,7 @@ def resolve_paths(
     """Return the platform-native profile and ledger paths."""
     current_platform = platform or sys.platform
     current_home = home or Path.home()
-    current_environment = environment if environment is not None else os.environ
+    current_environment = environment if environment is not None else _path_environment()
 
     if config_dir:
         config_base = Path(config_dir).expanduser()

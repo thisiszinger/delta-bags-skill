@@ -9,6 +9,7 @@ import tempfile
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from unittest import mock
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -42,6 +43,24 @@ class PathTests(unittest.TestCase):
         )
         self.assertEqual(windows_profiles, Path("C:/roaming/delta-bags/profiles.json"))
         self.assertEqual(windows_submissions, Path("C:/local/delta-bags/submissions.json"))
+
+    def test_default_environment_reads_only_path_variables(self) -> None:
+        with mock.patch.dict(
+            os.environ,
+            {
+                "XDG_CONFIG_HOME": "/custom/config",
+                "XDG_STATE_HOME": "/custom/state",
+                "OPENAI_API_KEY": "must-not-be-read",
+            },
+            clear=True,
+        ):
+            self.assertEqual(
+                state._path_environment(),
+                {
+                    "XDG_CONFIG_HOME": "/custom/config",
+                    "XDG_STATE_HOME": "/custom/state",
+                },
+            )
 
 
 class ProfileTests(unittest.TestCase):

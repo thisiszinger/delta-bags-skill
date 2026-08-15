@@ -63,14 +63,16 @@ Retain entries for 30 days, then prune them. Use the flight date, airport pair, 
 
 ## Helper commands
 
-Run `python scripts/state.py --help` for complete arguments. Common commands:
+Resolve `<skill-dir>` to the directory containing the loaded `SKILL.md`; do not assume the current working directory is the skill directory. Run `python <skill-dir>/scripts/state.py --help` for complete arguments. Common commands:
 
 ```text
-python scripts/state.py paths
-python scripts/state.py list-profiles
-python scripts/state.py upsert-profile --type companion --friendly-name Pat --first-name Pat --last-name Lee --skymiles-number 0123456789
-python scripts/state.py find-duplicate --flight-date 2026-08-15 --departure ATL --arrival LAX --profile-id <id>
-python scripts/state.py record-submission --flight-date 2026-08-15 --departure ATL --arrival LAX --profile-id <id> --outcome approved
+python <skill-dir>/scripts/state.py paths
+python <skill-dir>/scripts/state.py list-profiles
+python <skill-dir>/scripts/state.py upsert-profile --type companion --friendly-name Pat --first-name Pat --last-name Lee --skymiles-number 0123456789
+python <skill-dir>/scripts/state.py find-duplicate --flight-date 2026-08-15 --departure ATL --arrival LAX --profile-id <id>
+python <skill-dir>/scripts/state.py record-submission --flight-date 2026-08-15 --departure ATL --arrival LAX --profile-id <id> --outcome approved
 ```
 
 Use `--config-dir` and `--state-dir` only for tests or an explicitly selected private location. The skill must work without this helper by applying the same schemas to a host-private store.
+
+For a manually adapted Grok Bot private skill, prefer directories under `/workspace/delta-bags` because xAI documents `/workspace` as durable. Tell the Agent User that every Bot on the same account shares that computer and can access those files.

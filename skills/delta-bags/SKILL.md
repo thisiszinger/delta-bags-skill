@@ -19,7 +19,7 @@ Map host tools to these semantic capabilities:
 
 Treat every capability as optional. Ask for missing values when discovery is unavailable. If browser interaction is unavailable, prepare the verified values and official form link for the Agent User; never report a submission.
 
-Use `scripts/state.py` only when no preferred private store exists and local file access is available. Read [references/storage.md](references/storage.md) before storing, changing, or deleting data.
+Use `scripts/state.py` only when no preferred private store exists and local file access is available. Resolve it relative to the directory containing this `SKILL.md`, never relative to the current working directory. Hermes may expose that directory as `${HERMES_SKILL_DIR}`; OpenClaw may expose it as `{baseDir}`. Read [references/storage.md](references/storage.md) before storing, changing, or deleting data.
 
 ## Protect the workflow boundary
 
