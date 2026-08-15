@@ -39,6 +39,12 @@ npx skills update delta-bags --global --yes
 
 For a project-only installation, omit `--global`. The installer writes the appropriate agent directories and records the source in `skills-lock.json` so updates remain traceable.
 
+GitHub CLI users can install the latest tagged release instead. Repeat with `--agent claude-code` for Claude Code, or add `--pin v0.1.0` for a reproducible version:
+
+```sh
+gh skill install thisiszinger/delta-bags-skill delta-bags --agent codex --scope user
+```
+
 ### ChatGPT and Codex
 
 The installer places the skill where Codex can discover it. Invoke it as `$delta-bags`, or describe a late Delta baggage delivery and allow implicit matching.
