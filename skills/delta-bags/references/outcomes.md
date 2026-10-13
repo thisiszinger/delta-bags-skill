@@ -17,7 +17,10 @@ Current recognition aids include:
 - `1011`: no checked bags associated with the reservation;
 - `1998`: bags recorded as arriving on time;
 - `2001`: ineligible airports;
-- `1004`, `1005`, `07641`, or `V018`: itinerary/input mismatch variants.
+- `1004`, `1005`, `07641`, or `V018`: itinerary/input mismatch variants;
+- `1003`, `default`, or `irop-error`: generic or temporary failure, retry only on request;
+- a result titled “Duplicate claim”: already submitted;
+- a result saying the SkyMiles account is not valid: rejected.
 
 Do not label a request `approved` merely because the form accepted a click, navigation completed, or Delta acknowledged receipt. A Submission Confirmation is not necessarily an award confirmation.
 

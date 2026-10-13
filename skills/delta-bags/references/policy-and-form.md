@@ -10,11 +10,11 @@ Read this reference before every 20-Minute Bag Guarantee Request, then verify th
 
 ## Verified snapshot
 
-Last researched read-only on 2026-08-15. No request was submitted.
+Last verified read-only on 2026-10-13 against the live page, its form and message JSON, and the baggage FAQ. No request was submitted.
 
 The current policy offers 2,500 bonus miles when an eligible checked bag takes more than 20 minutes to reach the baggage carousel. The interval runs from arrival at the gate to delivery at the carousel. Delta's baggage-tracking measurement controls where available.
 
-Submit after the flight and within two hours of arrival. An older Delta-hosted static page still says three days and starts timing at door open; do not use that older rule. Apply the stricter current two-hour rule unless the live canonical page clearly changes it.
+Submit after the flight and within two hours of arrival (Delta's error code 1010 says 120 minutes). If any older Delta page mentions three days, the live canonical page's two-hour rule still governs.
 
 Current baseline eligibility:
 
@@ -26,7 +26,7 @@ Current baseline eligibility:
 
 Current exclusions include oversize or overweight baggage, special items, employee pass travel, and certain industry-discount travel. Delta may suspend the guarantee for baggage-system failures, severe weather, or circumstances outside its control.
 
-One Requesting Traveler receives at most one award per outbound or return travel, regardless of the number of checked bags. Submit separate requests for separate travelers and trips.
+One Requesting Traveler receives at most one award per outbound or return travel, regardless of the number of checked bags; if any one bag is late, the traveler is eligible. Submit separate requests for separate travelers and trips.
 
 ## Current form fields
 
@@ -42,7 +42,7 @@ All seven fields are currently required:
 | Arrival City | select a three-letter airport code |
 | Confirmation Number | exactly 6 alphanumeric characters |
 
-The form currently works while signed out and has no visible CAPTCHA. Treat either condition as volatile and react to the live page.
+The form currently works while signed out and has no CAPTCHA. Treat either condition as volatile and react to the live page. Delta's edge may reject non-browser clients and HEAD requests; a real browser GET is fine.
 
 ## Verification gate
 
