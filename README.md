@@ -1,199 +1,130 @@
+<p align="center">
+  <img src="assets/launch.png" alt="Late Delta bags? Your agent gets you paid. Delta Bags is an open-source Agent Skill that works in Claude Code, Codex, Gemini CLI, Cursor, Hermes, OpenClaw and more." width="100%">
+</p>
+
 # Delta Bags
 
-Delta Bags is an unofficial Agent Skill for handling Delta Air Lines' 20-Minute Bag Guarantee Request. Tell a capable agent that your checked bag took more than 20 minutes, review one concise confirmation, and let the agent submit the public Delta form.
+Delta owes you 2,500 SkyMiles when a checked bag takes more than 20 minutes to reach the carousel on a domestic flight. Almost nobody files the form, because you have to remember it, find your confirmation number, and submit within two hours of landing.
 
-The project is in beta. Its instruction and fallback-state paths are tested, but the complete browser flow remains unvalidated until a genuine eligible late-bag event occurs.
+Delta Bags is an open-source [Agent Skill](https://agentskills.io) that teaches your AI agent to do it for you. Say "my Delta bags were late", review one confirmation, and the agent finds the flight, verifies Delta's live terms, submits the public form, and tells you exactly what Delta said.
 
-## What it handles
+[![Tests](https://github.com/thisiszinger/delta-bags-skill/actions/workflows/test.yml/badge.svg)](https://github.com/thisiszinger/delta-bags-skill/actions/workflows/test.yml)
+[![skills.sh](https://img.shields.io/badge/skills.sh-delta--bags-black)](https://skills.sh/thisiszinger/delta-bags-skill/delta-bags)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-- Finds the Affected Flight from calendar and Delta email when those capabilities are available.
-- Re-checks Delta's live policy and public form before every request.
-- Supports a Default Traveler and separately attested companions in a Request Batch.
-- Uses one confirmation before submitting a separate form for each Requesting Traveler.
-- Reports Delta's exact result without treating receipt as approval.
-- Falls back to asking for the seven form fields or preparing a manual handoff when integrations are unavailable.
-- Optionally retains Traveler Profiles and a 30-day duplicate ledger outside the repository.
-
-The canonical portable skill is [skills/delta-bags](skills/delta-bags). It follows the [Agent Skills specification](https://agentskills.io/specification) and uses semantic capabilities instead of binding its workflow to one host's tool names.
+> **Beta.** The instructions, state helper, and read-only checks against Delta's live form are tested. The full browser submission has not yet been exercised on a real late-bag event, because that requires a real late bag. If you get one, [tell us how it went](https://github.com/thisiszinger/delta-bags-skill/issues).
 
 ## Install
 
-Delta Bags is [listed on skills.sh](https://skills.sh/thisiszinger/delta-bags-skill/delta-bags). Install it with the cross-agent `skills` CLI; no clone or global CLI installation is required:
+One command, any agent. The installer detects what you have (Claude Code, Codex, Gemini CLI, Cursor, Copilot, Hermes, OpenClaw, Grok Build, OpenCode, Windsurf, Warp, Zed, Amp, Antigravity, Kiro, Devin, Junie, Vibe, and about 60 more):
 
 ```sh
 npx skills add thisiszinger/delta-bags-skill --skill delta-bags
 ```
 
-The interactive installer detects supported agents and asks whether to install for the current project or for the current user. To install globally for Claude Code, Codex, and OpenClaw without prompts, run:
+Add `--global` to install for every project, or `--agent claude-code --agent codex` to pick targets without prompts.
 
-```sh
-npx skills add thisiszinger/delta-bags-skill --skill delta-bags --global --agent claude-code --agent codex --agent openclaw --yes
+**No terminal? Paste this into your agent instead:**
+
+```text
+Install the Agent Skill "delta-bags" from https://github.com/thisiszinger/delta-bags-skill
+(the skill lives in skills/delta-bags). Copy the whole directory, including references/
+and scripts/, into your skills folder, then confirm you can see the /delta-bags skill.
 ```
 
-Verify or update the global installation later with:
+Or skip installing entirely and get a one-shot prompt that includes the skill inline:
 
 ```sh
-npx skills list --global
-npx skills update delta-bags --global --yes
+npx skills use thisiszinger/delta-bags-skill@delta-bags
 ```
 
-For a project-only installation, omit `--global`. The installer writes the appropriate agent directories and records the source in `skills-lock.json` so updates remain traceable.
+<details>
+<summary><strong>Per-agent install paths</strong></summary>
 
-GitHub CLI users can install the latest tagged release instead. Repeat with `--agent claude-code` for Claude Code, or add `--pin v0.1.1` for a reproducible version:
+Every host below reads the standard `skills/delta-bags` directory. Copy the whole directory, not only `SKILL.md`, so the references and helper script come along.
 
-```sh
-gh skill install thisiszinger/delta-bags-skill delta-bags --agent codex --scope user
-```
-
-### ChatGPT and Codex
-
-The installer places the skill where Codex can discover it. Invoke it as `$delta-bags`, or describe a late Delta baggage delivery and allow implicit matching.
-
-For a manual installation, copy or symlink `skills/delta-bags` to `~/.agents/skills/delta-bags` for personal use or `.agents/skills/delta-bags` inside a repository. Standalone skills are also supported by the ChatGPT desktop app. See the official [ChatGPT and Codex skills documentation](https://learn.chatgpt.com/docs/build-skills).
-
-### Claude Code
-
-The installer places the skill in Claude Code's skills directory. Invoke `/delta-bags` or use natural language.
-
-For a manual installation, copy or symlink `skills/delta-bags` to `~/.claude/skills/delta-bags` for personal use or `.claude/skills/delta-bags` for a project. See [Claude Code skills](https://code.claude.com/docs/en/skills).
-
-Claude Code users can alternatively install the native plugin directly from this repository:
-
-```sh
-claude plugin marketplace add thisiszinger/delta-bags-skill
-claude plugin install delta-bags@delta-bags-skill
-```
-
-The plugin-scoped invocation is `/delta-bags:delta-bags`; natural-language matching also works.
-
-### Hermes Agent
-
-Hermes indexes skills.sh, so Delta Bags already appears in `hermes skills search delta-bags`. Install the synchronized GitHub bundle and start a new session:
-
-```sh
-hermes skills install skills-sh/thisiszinger/delta-bags-skill/delta-bags
-```
-
-Invoke `/delta-bags`, or simply tell Hermes that your Delta bags were late. The repository's fallback helper has also been checked with Hermes's community-skill security scanner. See [Working with Skills in Hermes](https://hermes-agent.nousresearch.com/docs/guides/work-with-skills/).
-
-### OpenClaw
-
-Install the complete bundle into OpenClaw's shared skills directory with the cross-agent installer:
-
-```sh
-npx skills add thisiszinger/delta-bags-skill --skill delta-bags --agent openclaw --global --yes --copy
-```
-
-This path is tested with the current repository. OpenClaw's documentation also describes a native `skills-sh:` source, but the latest released CLI tested here does not yet accept it. Publishing to ClawHub will provide native search, scanning, installation, and updates; [issue #4](https://github.com/thisiszinger/delta-bags-skill/issues/4) tracks that work. See [OpenClaw's skills CLI](https://docs.openclaw.ai/cli/skills).
-
-### Grok Build and Grok Bot
-
-Grok Build discovers standalone skills and Claude Code-compatible plugins. Install the tagged plugin and inspect the discovered components:
-
-```sh
-grok plugin install thisiszinger/delta-bags-skill@v0.1.1
-grok inspect
-```
-
-Review the package when Grok asks whether to trust it. If Delta Bags is already installed globally for Codex or Claude Code, Grok Build can discover that copy too. For a skill-only installation, use `gh skill install thisiszinger/delta-bags-skill delta-bags --dir ~/.grok/skills`. Invoke `/delta-bags` or use natural language. See [Grok Build skills, plugins, and marketplaces](https://docs.x.ai/build/features/skills-plugins-marketplaces).
-
-Grok Bot has the right runtime shape—persistent skills, a browser-backed computer, and optional app connectors—but xAI does not currently document a public GitHub skill-package import or public Bot marketplace submission flow. Do not assume the Grok Build command installs into Grok Bot. As a manual preview, ask a Bot to read this repository and create a private skill from `skills/delta-bags/SKILL.md` and every referenced file, preserve the explicit confirmation before submission, and keep durable state under `/workspace/delta-bags`; review the generated skill before using it. [Issue #6](https://github.com/thisiszinger/delta-bags-skill/issues/6) tracks a first-class Bot install as xAI exposes one.
-
-### Other personal agents
-
-Any host that implements the [Agent Skills specification](https://agentskills.io/specification) can use the portable `skills/delta-bags` directory. Copy the entire directory—not only `SKILL.md`—into that host's project or user skill root so its references and fallback helper remain available.
-
-Loading the skill and running the full workflow are separate compatibility questions. A personal agent needs an authenticated interactive browser for submission; email and calendar access make discovery easier but are optional; a private store or local filesystem enables saved profiles. Without those capabilities, Delta Bags deliberately degrades to focused questions and a verified manual handoff.
-
-### Gemini CLI
-
-Install the skill directory from this repository:
-
-```sh
-gemini skills install https://github.com/thisiszinger/delta-bags-skill --path skills/delta-bags
-```
-
-See [Gemini CLI Agent Skills](https://geminicli.com/docs/cli/skills/).
-
-### Cursor and GitHub Copilot
-
-Copy or symlink the directory to a supported project or user skills location. Cursor supports `.agents/skills` and `.cursor/skills`; GitHub Copilot supports `.github/skills`, `.agents/skills`, and `.claude/skills` in documented environments.
-
-- [Cursor Agent Skills](https://cursor.com/docs/skills)
-- [GitHub Copilot Agent Skills](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills)
-
-## Discovery and marketplaces
-
-- **skills.sh:** the public listing is live. There is no separate submission form; public installs through the `skills` CLI provide the anonymous aggregate data used for search and ranking.
-- **Claude:** `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` make the repository installable as a native Claude Code plugin today. A maintainer must still submit it through [Anthropic's plugin form](https://platform.claude.com/plugins/submit) for centralized discovery; [issue #2](https://github.com/thisiszinger/delta-bags-skill/issues/2) tracks that human review step. Approval places it in the `claude-community` catalog; Anthropic curates its separate official catalog independently.
-- **ChatGPT and Codex:** `.codex-plugin/plugin.json` packages the same skill as an OpenAI skills-only plugin. A verified publisher must still submit the bundle, listing assets, policy URLs, prompts, and review tests through the [OpenAI plugin portal](https://platform.openai.com/plugins); [issue #3](https://github.com/thisiszinger/delta-bags-skill/issues/3) tracks the prerequisites. Once approved and published, it appears in the shared ChatGPT and Codex Plugins Directory.
-- **Hermes Agent:** Hermes already surfaces the skills.sh entry in its own search and can install it directly, so no separate registry submission is required. The repository's standard `skills/` layout also makes it usable as a custom Hermes tap.
-- **OpenClaw:** the tested cross-agent installer works today. Publishing a native, scanned ClawHub release requires a maintainer login and an explicit MIT-0 licensing decision; [issue #4](https://github.com/thisiszinger/delta-bags-skill/issues/4) tracks it.
-- **Grok Build:** the repository is directly installable as a skill, while inclusion in xAI's built-in plugin marketplace requires a commit-pinned catalog pull request and code-owner review; [issue #5](https://github.com/thisiszinger/delta-bags-skill/issues/5) tracks it.
-- **Grok Bot:** there is no documented third-party package directory or import contract yet. [Issue #6](https://github.com/thisiszinger/delta-bags-skill/issues/6) tracks the emerging distribution surface rather than claiming unsupported installation.
-
-The manifests are distribution wrappers only. They both point at the canonical `skills/` directory, so marketplace installs and direct skill installs use the same implementation.
-
-See [the distribution research](docs/research/skill-distribution-and-discovery.md) and [personal-agent compatibility research](docs/research/personal-agent-host-compatibility.md) for verified channel requirements, paths, and source links.
-
-## Capability support
-
-The Agent Skills standard packages instructions and resources; it does not install email, calendar, browser, authentication, or private-storage connectors.
-
-| Host | Skill loading | Full workflow status |
+| Agent | Native path or command | Docs |
 | --- | --- | --- |
-| ChatGPT desktop | Standalone skill | Works with available equivalent capabilities; end-to-end beta validation pending |
-| Codex CLI / IDE | Native `.agents/skills` discovery | Works with available equivalent capabilities; end-to-end beta validation pending |
-| Claude Code | Native `.claude/skills` discovery | Works with equivalent tools; end-to-end beta validation pending |
-| Hermes Agent | Native skills.sh/URL install and `~/.hermes/skills` discovery | Strong fit when browser and mail/calendar integrations are configured; end-to-end beta validation pending |
-| OpenClaw | Tested cross-agent install into native workspace/global skill roots; ClawHub pending | Strong fit when browser and mail/calendar integrations are configured; end-to-end beta validation pending |
-| Grok Build | Native standalone-skill and Claude-compatible plugin discovery | Package discovery and plugin installation validated; full workflow depends on equivalent integrations and remains end-to-end beta |
-| Grok Bot | Persistent skill and computer capabilities | Capability-compatible, but third-party package installation is not yet documented |
-| Gemini CLI | Native Agent Skills support | Works with equivalent tools; end-to-end beta validation pending |
-| Cursor | Native Agent Skills support | Guided or automated according to available tools; end-to-end beta validation pending |
-| GitHub Copilot | Native Agent Skills support in documented surfaces | Usually a prepared/manual handoff without an authenticated interactive browser |
+| Claude Code | `~/.claude/skills/` or `.claude/skills/`; or `claude plugin marketplace add thisiszinger/delta-bags-skill` then `claude plugin install delta-bags@delta-bags-skill` | [Skills](https://code.claude.com/docs/en/skills) |
+| Claude.ai / Cowork | Customize › Skills › Upload a skill (zip of `skills/delta-bags`) | [Use skills](https://support.claude.com/en/articles/12512180-use-skills-in-claude) |
+| ChatGPT / Codex | `~/.agents/skills/` or `.agents/skills/`; invoke as `$delta-bags` | [Build skills](https://learn.chatgpt.com/docs/build-skills) |
+| Gemini CLI | `gemini skills install https://github.com/thisiszinger/delta-bags-skill --path skills/delta-bags` | [Skills](https://geminicli.com/docs/cli/skills/) |
+| Antigravity | `.agents/skills/` or `~/.gemini/config/skills/` | [Skills](https://antigravity.google/docs/skills) |
+| Cursor | `.cursor/skills/`, `.agents/skills/`, or `~/.agents/skills/` | [Skills](https://cursor.com/docs/context/skills) |
+| GitHub Copilot | `.github/skills/`, `.agents/skills/`, or `~/.copilot/skills/`; or `gh skill install thisiszinger/delta-bags-skill delta-bags` | [Agent skills](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) |
+| Hermes Agent | `hermes skills install skills-sh/thisiszinger/delta-bags-skill/delta-bags` | [Skills](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills) |
+| OpenClaw | `openclaw skills install skills-sh:thisiszinger/delta-bags-skill/delta-bags` (or `--global`) | [Skills](https://docs.openclaw.ai/tools/skills) |
+| Grok Build | `.grok/skills/`, `~/.grok/skills/`, or `~/.agents/skills/`; the repo also installs as a plugin | [Skills and plugins](https://docs.x.ai/build/features/skills-plugins-marketplaces) |
+| Amp | `amp skill add https://github.com/thisiszinger/delta-bags-skill` | [Skills](https://ampcode.com/docs/customize/skills) |
+| OpenCode | `.opencode/skills/`, `.agents/skills/`, or `~/.config/opencode/skills/` | [Skills](https://opencode.ai/docs/skills/) |
+| Kiro | `.kiro/skills/` or `~/.kiro/skills/`; IDE: Import a skill from the GitHub URL | [Skills](https://kiro.dev/docs/skills/) |
+| Devin (Desktop and CLI) | `.devin/skills/`, `.agents/skills/`, or `~/.agents/skills/` | [Skills](https://docs.devin.ai/cli/extensibility/skills/overview) |
+| Factory Droid | `.factory/skills/` or `~/.factory/skills/` | [Skills](https://docs.factory.com/cli/configuration/skills) |
+| Warp | `.agents/skills/` or `.warp/skills/` | [Skills](https://docs.warp.dev/agent-platform/warp-agents/skills) |
+| Zed | `.agents/skills/` or `~/.agents/skills/`; `agent: create skill from url` | [Skills](https://zed.dev/docs/ai/skills) |
+| JetBrains Junie | `.junie/skills/` or `~/.junie/skills/` | [Agent skills](https://junie.jetbrains.com/docs/agent-skills.html) |
+| Cline / Roo Code | `.cline/skills/` or `~/.cline/skills/`; `.roo/skills/` or `~/.roo/skills/` | [Cline](https://docs.cline.bot/features/skills) · [Roo](https://roocodeinc.github.io/Roo-Code/features/skills) |
+| Mistral Vibe | `.vibe/skills/`, `.agents/skills/`, or `~/.vibe/skills/` | [Skills](https://docs.mistral.ai/vibe/code/cli/skills) |
+| Manus / Perplexity Computer | Skills page › upload a zip of `skills/delta-bags` | [Manus](https://manus.im/docs/features/skills.md) · [Perplexity](https://docs.perplexity.ai/docs/agent-api/skills) |
 
-Every host can use the manual field fallback. A host without browser interaction must stop after preparing verified values and the official form link.
+Anything else that implements the [Agent Skills specification](https://agentskills.io/specification) can use the directory directly. Ask your agent to read `skills/delta-bags/SKILL.md` if you are unsure where it expects skills.
 
-## Private state
+</details>
 
-Prefer the agent host's existing private store. If none exists, the optional standard-library helper stores plaintext JSON in platform-native per-user locations:
+## How it works
 
-| Platform | Profiles | Duplicate ledger |
-| --- | --- | --- |
-| Linux | `~/.config/delta-bags/profiles.json` | `~/.local/state/delta-bags/submissions.json` |
-| macOS | `~/Library/Application Support/delta-bags/profiles.json` | `~/Library/Application Support/delta-bags/submissions.json` |
-| Windows | `%APPDATA%\delta-bags\profiles.json` | `%LOCALAPPDATA%\delta-bags\submissions.json` |
+<p align="center"><img src="assets/demo.gif" alt="Demo: the agent finds the flight, shows one confirmation, submits, and reports Claim Successful" width="800"></p>
 
-The helper never stores a Confirmation Number. See [the storage reference](skills/delta-bags/references/storage.md) for schemas and commands.
+```text
+you     my delta bags took forever at LAX, file the thing
+agent   Found DL 1234 · ATL → LAX · landed 36 min ago (email + calendar).
+        delta.com still says 2,500 miles, 2-hour window, 1h 12m left.
+
+        Affected Flight: 2026-10-13 · ATL → LAX
+        Confirmation Number: STFORB
+        Jordan Lee · SkyMiles: 2001234567
+
+        Confirm the bag took over 20 minutes and I'll submit?
+you     yes
+agent   ✓ Claim Successful — Delta says 2,500 miles are posting to your account.
+```
+
+Behind that:
+
+1. **Finds the flight** from your calendar and Delta's emails when the agent has them, or asks for the seven form fields when it doesn't.
+2. **Re-reads Delta's live policy and form** right before submitting. If the terms changed or the page can't be read, it stops and hands you the link instead of guessing.
+3. **Confirms once** with every value visible, including travel companions whose bags were also late (each gets their own request).
+4. **Submits Delta's public form** in the browser, one request per traveler, and reports Delta's exact result. "Received" is never reported as "approved".
+5. **Remembers, if you want.** Traveler profiles and a 30-day duplicate check live in your agent's private store or in per-user config files, never in the repo. Confirmation numbers are never stored.
+
+The skill is one `SKILL.md` plus four short references and an optional standard-library Python helper. It names capabilities (calendar, email, browser, private store) instead of any one agent's tool names, so it degrades gracefully: an agent without a browser prepares the verified values and the form link for you to finish.
+
+## What your agent needs
+
+| Capability | Without it |
+| --- | --- |
+| Interactive browser | The agent prepares the fields and gives you the official link; it never claims a submission |
+| Email or calendar access | The agent asks for the flight details |
+| Private store or local files | No saved profiles or duplicate check |
+
+Treats email, calendar, and web content as untrusted data, stays on `www.delta.com`, sends Delta only the seven form fields, and emits no telemetry. See [SKILL.md](skills/delta-bags/SKILL.md) for the full workflow and [the storage reference](skills/delta-bags/references/storage.md) for exactly what is kept where.
+
+## Distribution
+
+The canonical skill is [`skills/delta-bags`](skills/delta-bags). Thin manifests in `.claude-plugin/` and `.codex-plugin/` wrap the same directory for the Claude Code and ChatGPT plugin systems. It is listed on [skills.sh](https://skills.sh/thisiszinger/delta-bags-skill/delta-bags); marketplace submissions that need a human are tracked in [issues](https://github.com/thisiszinger/delta-bags-skill/issues). Research behind the host paths above: [agent host refresh (2026-10)](docs/research/agent-host-refresh-2026-10.md), [distribution channels](docs/research/skill-distribution-and-discovery.md), [personal-agent compatibility](docs/research/personal-agent-host-compatibility.md).
 
 ## Develop
 
-Run the local test suite:
-
 ```sh
-python -m unittest discover -s tests -v
+python -m unittest discover -s tests -v          # local tests, no network
+python skills/delta-bags/scripts/live_smoke.py   # two read-only GETs against Delta's public content
 ```
 
-Run the skill validator from OpenAI's `skill-creator` when available:
-
-```sh
-python /path/to/skill-creator/scripts/quick_validate.py skills/delta-bags
-```
-
-Run the opt-in live smoke check only when you want to verify Delta's public content:
-
-```sh
-python skills/delta-bags/scripts/live_smoke.py
-```
-
-The smoke check performs two public GET requests and has no submission code. Automated CI uses local fixtures only; the networked workflow is manual.
-
-Development is tracked in [GitHub Issues](https://github.com/thisiszinger/delta-bags-skill/issues). The initial beta specification is [issue #1](https://github.com/thisiszinger/delta-bags-skill/issues/1).
+CI runs the local tests on every push. The networked smoke check is a manual workflow. No test ever submits a request.
 
 ## Disclaimer
 
-Delta Bags is an independent open-source project. It is not affiliated with, endorsed by, or sponsored by Delta Air Lines. Delta determines eligibility and awards. Policies and forms can change without notice, so the skill fails closed when it cannot verify the live terms.
+Delta Bags is an independent open-source project. It is not affiliated with, endorsed by, or sponsored by Delta Air Lines. Delta determines eligibility and awards, and its policy can change without notice; the skill fails closed when it cannot verify the live terms. Agent and product names and logos belong to their respective owners.
 
 ## License
 
