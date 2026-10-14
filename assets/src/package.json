@@ -1,0 +1,10 @@
+{
+  "name": "delta-bags-assets",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "stills": "THEME=light node render.mjs still launch ../launch.png && THEME=light node render.mjs still og ../social-preview.png",
+    "video": "THEME=light node render.mjs video split ../demo.mp4 30 && THEME=navy node render.mjs video phone ../loop.mp4 30"
+  },
+  "dependencies": { "playwright-core": "^1.50.0" }
+}

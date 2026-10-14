@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="assets/launch.png" alt="Late Delta bags? Your agent gets you paid. Delta Bags is an open-source Agent Skill that works in Claude Code, Codex, Gemini CLI, Cursor, Hermes, OpenClaw and more." width="100%">
+  <img src="assets/launch.png" alt="Late bag? Text your agent. An iPhone shows a traveler texting their agent that a bag took 40 minutes at LAX; the agent confirms the flight, files Delta's bag guarantee request, and reports Delta's Claim Successful response. Bring your own agent: Muse, ChatGPT, Grok Bot, Instinct, OpenClaw, Hermes, Orchid, Tab." width="100%">
 </p>
 
 # Delta Bags
 
 Delta owes you 2,500 SkyMiles when a checked bag takes more than 20 minutes to reach the carousel on a domestic flight. Almost nobody files the form, because you have to remember it, find your confirmation number, and submit within two hours of landing.
 
-Delta Bags is an open-source [Agent Skill](https://agentskills.io) that teaches your AI agent to do it for you. Say "my Delta bags were late", review one confirmation, and the agent finds the flight, verifies Delta's live terms, submits the public form, and tells you exactly what Delta said.
+Delta Bags is an open-source [Agent Skill](https://agentskills.io) that teaches your AI agent to do it for you. Text your personal agent "my bag took 40 minutes", review one confirmation, and the agent finds the flight, verifies Delta's live terms, submits the public form, and tells you exactly what Delta said.
 
 [![Tests](https://github.com/thisiszinger/delta-bags-skill/actions/workflows/test.yml/badge.svg)](https://github.com/thisiszinger/delta-bags-skill/actions/workflows/test.yml)
 [![skills.sh](https://img.shields.io/badge/skills.sh-delta--bags-black)](https://skills.sh/thisiszinger/delta-bags-skill/delta-bags)
@@ -16,7 +16,9 @@ Delta Bags is an open-source [Agent Skill](https://agentskills.io) that teaches 
 
 ## Install
 
-One command, any agent. The installer detects what you have (Claude Code, Codex, Gemini CLI, Cursor, Copilot, Hermes, OpenClaw, Grok Build, OpenCode, Windsurf, Warp, Zed, Amp, Antigravity, Kiro, Devin, Junie, Vibe, and about 60 more):
+Using a personal agent you text, like Hermes, OpenClaw, Muse, ChatGPT, Grok Bot, Instinct, Orchid, or Tab? Skip the terminal and use the paste-in prompt below. Hermes and OpenClaw also have native installers in the table further down.
+
+One command, any agent with a skills folder. The installer detects what you have (Claude Code, Codex, Gemini CLI, Cursor, Copilot, Hermes, OpenClaw, Grok Build, OpenCode, Windsurf, Warp, Zed, Amp, Antigravity, Kiro, Devin, Junie, Vibe, and about 60 more):
 
 ```sh
 npx skills add thisiszinger/delta-bags-skill --skill delta-bags
@@ -73,11 +75,13 @@ Anything else that implements the [Agent Skills specification](https://agentskil
 
 ## How it works
 
-<p align="center"><img src="assets/demo.gif" alt="Demo: the agent finds the flight, shows one confirmation, submits, and reports Claim Successful" width="800"></p>
+<p align="center"><img src="assets/loop.gif" alt="Demo on an iPhone: you text your agent that the bag took 40 minutes at LAX, the agent confirms the flight and files the request, and Delta replies Claim Successful" width="800"></p>
+
+The conversation above is illustrative. A real run looks like this in any chat-based agent:
 
 ```text
-you     my delta bags took forever at LAX, file the thing
-agent   Found DL 1234 · ATL → LAX · landed 36 min ago (email + calendar).
+you     bag took 40 min at LAX
+agent   DL 1234 · ATL → LAX · landed 36 min ago (from your email).
         delta.com still says 2,500 miles, 2-hour window, 1h 12m left.
 
         Affected Flight: 2026-10-13 · ATL → LAX
@@ -85,8 +89,8 @@ agent   Found DL 1234 · ATL → LAX · landed 36 min ago (email + calendar).
         Jordan Lee · SkyMiles: 2001234567
 
         Confirm the bag took over 20 minutes and I'll submit?
-you     yes
-agent   ✓ Claim Successful — Delta says 2,500 miles are posting to your account.
+you     yes, file it
+agent   Submitted. Delta says "Claim Successful": 2,500 miles should post in a few days.
 ```
 
 Behind that:
