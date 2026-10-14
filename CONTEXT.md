@@ -1,6 +1,6 @@
 # Delta Bags
 
-Delta Bags helps an agent submit Delta's 20-Minute Bag Guarantee request for one traveler after an eligible late baggage delivery.
+Delta Bags helps an agent submit Delta's 20-Minute Bag Guarantee request for one or more travelers after an eligible late baggage delivery.
 
 ## Language
 

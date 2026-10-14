@@ -1,0 +1,11 @@
+{
+  "name": "delta-bags",
+  "version": "0.2.0",
+  "description": "Prepare, verify, and submit Delta Air Lines 20-Minute Bag Guarantee Requests.",
+  "author": { "name": "Zinger" },
+  "homepage": "https://github.com/thisiszinger/delta-bags-skill#readme",
+  "repository": "https://github.com/thisiszinger/delta-bags-skill",
+  "license": "MIT",
+  "keywords": ["agent-skills", "delta-air-lines", "travel", "baggage", "skymiles"],
+  "skills": "./skills/"
+}

@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<style>
+  :root{ --navy:#0B2A5B; --ink:#FFFFFF; --ink2:#C7D2EE; --ink3:#8FA3CC; --blue:#1B86F7; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{overflow:hidden;background:var(--navy)}
+  body{-webkit-font-smoothing:antialiased;font-family:'Hanken Grotesk',system-ui,sans-serif;color:var(--ink)}
+  .stage{position:relative;overflow:hidden;background:var(--navy)}
+
+  /* ---------- copy ---------- */
+  .copy{position:absolute;display:flex;flex-direction:column}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:22px;letter-spacing:-.01em}
+  .brand small{display:block;font-size:15px;font-weight:400;color:var(--ink2);margin-top:2px}
+  .brand .tag{width:30px;height:30px;flex:none}
+  h1{font-weight:700;letter-spacing:-.035em;line-height:.98}
+  .reward{display:flex;flex-direction:column}
+  .reward .big{font-weight:600;letter-spacing:-.02em;line-height:1.1}
+  .reward .big span{color:var(--ink2);font-weight:400}
+  .reward .sub{color:var(--ink2)}
+  .works .lbl{color:var(--ink2)}
+  .marks{display:flex;align-items:flex-end;gap:8px}
+  .mark{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:12px;width:var(--slot,72px)}
+  .mark .box{height:var(--mh,40px);display:flex;align-items:center;justify-content:center}
+  .mark img{height:100%;width:auto;max-width:64px;display:block;filter:brightness(0) invert(1);opacity:.95}
+  .mark img.raw{filter:none}
+  .mark span{font-size:var(--cap,14px);color:var(--ink3);white-space:nowrap}
+  .foot{display:flex;align-items:center;gap:18px}
+  .foot .qr{flex:none;background:#F3EFE6;border-radius:12px;padding:8px}
+  .foot .qr svg{display:block;width:100%;height:100%}
+  .foot .u1{font-weight:500}
+  .foot .u2{color:var(--ink3);margin-top:4px}
+
+  /* ---------- luggage ---------- */
+  .lug{position:absolute;pointer-events:none}
+  .lug canvas{display:block}
+
+  /* ---------- phone ---------- */
+  .cam{position:absolute;transform-origin:0 0}
+  .phone{position:relative;width:421px;height:861px;filter:drop-shadow(0 40px 60px rgba(0,0,0,.45)) drop-shadow(0 10px 20px rgba(0,0,0,.3))}
+  .phone .frame{position:absolute;left:0;top:0;width:421px;height:861px;z-index:5;pointer-events:none}
+  .screen{position:absolute;left:22.5px;top:21.5px;width:376px;height:818px;border-radius:56px;background:#fff;overflow:hidden;font-family:Inter,-apple-system,system-ui,sans-serif;color:#111;display:flex;flex-direction:column}
+  .status{height:50px;display:flex;justify-content:space-between;align-items:center;padding:5px 27px 0 46px;font-weight:600;font-size:16px;letter-spacing:-.01em}
+  .status .r{display:flex;align-items:center;gap:6px}
+  .status svg{display:block}
+  .hdr{height:58px;display:flex;align-items:center;padding:0 18px;background:rgba(250,250,251,.96);border-bottom:.5px solid rgba(0,0,0,.12);position:relative;z-index:2;gap:10px}
+  .hdr .ic{color:var(--blue);width:22px}
+  .hdr .av{width:34px;height:34px;border-radius:50%;background:#E6E9EF;display:grid;place-items:center;margin-left:auto}
+  .hdr .nm{font-size:16px;font-weight:600;color:#111;margin-right:auto}
+  .thread{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 12px 10px;overflow:hidden}
+  .stage.still .thread{justify-content:flex-start;padding-top:12px}
+  .stage.still .inbar,.stage.still .home{display:none}
+  .stage.still .step small,.stage.still .card .line small{display:none}
+  .stage.still .step{padding:4px 0}
+  .item{overflow:hidden;flex:none}
+  .item>div{padding-top:6px}
+  .row{display:flex;width:100%}
+  .row.sent{justify-content:flex-end}
+  .row.recv{justify-content:flex-start}
+  .bub{max-width:92%;padding:10px 14px 11px;border-radius:18px;font-size:22px;line-height:1.25;letter-spacing:-.012em}
+  .sent .bub{background:var(--blue);color:#fff}
+  .recv .bub{background:#EEEEF1;color:#111}
+  .bub b{font-weight:600}
+  .meta{text-align:right;font-size:12px;color:#8E8E93;padding:2px 6px 0 0;font-weight:500}
+  .typing{display:inline-flex;gap:5px;align-items:center;height:26px}
+  .typing i{width:9px;height:9px;border-radius:50%;background:#9A9AA0;display:block}
+  .card{max-width:92%;background:#fff;border:1px solid #E3E5EA;border-radius:18px;padding:10px 12px 8px;font-size:19px;line-height:1.2;color:#111}
+  .card .ttl{font-size:13px;font-weight:600;color:#6B7280;letter-spacing:.02em;text-transform:uppercase;padding-bottom:4px}
+  .step{display:flex;gap:9px;align-items:flex-start;padding:5px 0}
+  .step i{flex:none;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;margin-top:2px}
+  .step i.ok{background:#1B86F7}
+  .step i.run{border:2px solid #C9CDD6;border-top-color:#1B86F7}
+  .step .tx{color:#111}
+  .step .tx small{display:block;color:#6B7280;font-size:16px;margin-top:1px;line-height:1.2}
+  .card .q{padding-top:8px;border-top:1px solid #EEF0F3;margin-top:4px;color:#111}
+  .card .line{padding:3px 0;color:#111}
+  .card .line small{color:#6B7280;font-size:16px;display:block}
+  .inbar{display:flex;align-items:center;gap:10px;padding:8px 12px 8px}
+  .plus{width:34px;height:34px;border-radius:50%;background:#EEEEF1;display:grid;place-items:center;color:#6b6b70;flex:none}
+  .field{flex:1;height:40px;border:1px solid rgba(0,0,0,.16);border-radius:20px;display:flex;align-items:center;padding:0 14px;font-size:19px;color:#111;position:relative;white-space:nowrap;overflow:hidden}
+  .field .ph{color:#9a9aa0}
+  .field .send{position:absolute;right:5px;top:5px;width:28px;height:28px;border-radius:50%;background:var(--blue);display:grid;place-items:center}
+  .field .mic{position:absolute;right:13px;top:11px;color:#9a9aa0}
+  .home{height:30px;display:grid;place-items:center}
+  .home i{display:block;width:134px;height:5px;border-radius:3px;background:#111}
+  .hide{display:none !important}
+  .fade{position:absolute;inset:0;pointer-events:none;background:var(--navy)}
+  .caption{position:absolute;font-size:16px;color:var(--ink3)}
+</style>
+</head>
+<body>
+<div id="stage" class="stage"></div>
+<script type="module">
+import { createLuggage } from './luggage.js';
+const Q = new URLSearchParams(location.search);
+const LAYOUT = Q.get('layout') || 'launch';     // launch | og | split | phone
+const NOLUG = Q.get('luggage') === '0';
+const SIZES = {launch:[1600,900], og:[1280,640], split:[1920,1080], phone:[1920,1080]};
+const [W,H] = SIZES[LAYOUT];
+const L = Q.get('logodir') || 'logos/';
+const LOGOS = JSON.parse(Q.get('logos') || 'null') || [
+  {name:'ChatGPT',  src:L+'chatgpt.svg'},
+  {name:'Claude',   src:L+'claude.svg'},
+  {name:'Muse',     src:L+'muse.svg'},
+  {name:'Grok Bot', src:L+'grok.svg'},
+  {name:'Instinct', src:L+'instinct.svg', h:1.0},
+  {name:'Hermes',   src:L+'hermes.svg', h:0.88},
+  {name:'Orchid',   src:L+'orchid.svg'},
+  {name:'Tab',      src:L+'tab.png', raw:true, h:0.84},
+  {name:'OpenClaw', src:L+'openclaw.svg', h:0.88},
+  {name:'Poke',     src:L+'poke.svg'},
+];
+const QR_SRC = await (await fetch('qr-repo-dark.svg')).text();
+
+// ---------- script ----------
+const SENT1 = 'bag took 40 min at LAX';
+const SENT2 = 'yes, file it';
+const T = {
+  lug:0.1,
+  type1:[0.8,2.1], send1:2.4, deliv1:2.8,
+  dots1:[3.0,4.2],
+  card1:4.2, s1:4.2, s1ok:5.1, s2:5.6, s3:6.3, s4:7.0,
+  card2:8.2,
+  type2:[9.7,10.15], send2:10.4,
+  dots2:[10.7,11.5],
+  card3:11.5, s5ok:13.0,
+  final:13.5,
+  hold:18.2, end:19.0
+};
+const DURATION = T.end;
+
+// ---------- svg ----------
+const tagSVG = `<svg class="tag" viewBox="0 0 30 30" fill="none"><path d="M9 3h12l6 6v15.5A2.5 2.5 0 0 1 24.5 27h-19A2.5 2.5 0 0 1 3 24.5V9l6-6z" fill="#C7D2EE"/><circle cx="15" cy="9" r="2.4" fill="#0B2A5B"/><path d="M8 17h14M8 21h9" stroke="#0B2A5B" stroke-width="2" stroke-linecap="round"/></svg>`;
+const chevL = `<svg width="12" height="20" viewBox="0 0 12 20" fill="none"><path d="M10.5 1.5 2 10l8.5 8.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const person = `<svg width="20" height="20" viewBox="0 0 26 26" fill="#8A93A3"><circle cx="13" cy="9" r="5.2"/><path d="M3.5 23c.8-5 4.7-8 9.5-8s8.7 3 9.5 8z"/></svg>`;
+const sigSVG = `<svg width="19" height="12" viewBox="0 0 19 12" fill="#111"><rect x="0" y="8" width="3.4" height="4" rx="1"/><rect x="5.1" y="5.5" width="3.4" height="6.5" rx="1"/><rect x="10.2" y="3" width="3.4" height="9" rx="1"/><rect x="15.3" y="0" width="3.4" height="12" rx="1"/></svg>`;
+const wifiSVG = `<svg width="17" height="12" viewBox="0 0 17 12" fill="#111"><path d="M8.5 11.6 11 8.9a3.6 3.6 0 0 0-5 0z"/><path d="M8.5 6.3c1.5 0 2.9.6 3.9 1.6L14 6.3a7.8 7.8 0 0 0-11 0l1.6 1.6a5.5 5.5 0 0 1 3.9-1.6z"/><path d="M8.5 1.9c2.6 0 5 1 6.8 2.8L17 3.1A12 12 0 0 0 0 3.1l1.7 1.6A9.6 9.6 0 0 1 8.5 1.9z"/></svg>`;
+const batSVG = `<svg width="29" height="13" viewBox="0 0 29 13"><rect x=".5" y=".5" width="24" height="12" rx="3.5" stroke="#111" stroke-opacity=".4" fill="none"/><rect x="2" y="2" width="21" height="9" rx="2" fill="#111"/><path d="M26.2 4.3v4.4c1-.2 1.8-1.1 1.8-2.2s-.8-2-1.8-2.2z" fill="#111" fill-opacity=".4"/></svg>`;
+const sendIcon = `<svg width="14" height="16" viewBox="0 0 14 16" fill="none"><path d="M7 15V1M1.5 6.5 7 1l5.5 5.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const micIcon = `<svg width="14" height="20" viewBox="0 0 14 20" fill="none"><rect x="4" y="1" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 9.5a5.5 5.5 0 0 0 11 0M7 15v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+const tick = `<svg width="11" height="9" viewBox="0 0 10 8" fill="none"><path d="M1 4.2 3.8 7 9 1.3" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+const item = (id, inner) => `<div class="item" id="${id}"><div>${inner}</div></div>`;
+const sent = (id, t) => item(id, `<div class="row sent"><div class="bub">${t}</div></div>`);
+const recv = (id, t) => item(id, `<div class="row recv"><div class="bub">${t}</div></div>`);
+const dots = id => item(id, `<div class="row recv"><div class="bub"><span class="typing"><i></i><i></i><i></i></span></div></div>`);
+const step = (id, text, sub='') => `<div class="item" id="${id}"><div class="step"><i class="run" id="${id}i"></i><div class="tx" id="${id}t">${text}${sub?`<small>${sub}</small>`:''}</div></div></div>`;
+
+function phoneHTML(){
+  return `<div class="phone"><img class="frame" src="frame.png"><div class="screen">
+    <div class="status"><span>9:41</span><span class="r">${sigSVG}${wifiSVG}${batSVG}</span></div>
+    <div class="hdr"><div class="ic">${chevL}</div><div class="av">${person}</div><div class="nm">Your agent</div></div>
+    <div class="thread" id="thread">
+      ${sent('m1', SENT1)}
+      ${item('d1meta', `<div class="meta">Delivered</div>`)}
+      ${dots('t1')}
+      ${item('c1', `<div class="row recv"><div class="card"><div class="ttl">Checked</div>
+        ${step('s1', 'Email + calendar: DL 1234', 'ATL → LAX, your Delta confirmation today')}
+        ${step('s2', 'Landed 3:34 · bag out 4:14', '40 minutes, past the 20-minute guarantee')}
+        ${step('s3', 'Live terms on delta.com', '2,500 SkyMiles · 2-hour window · 1h 18m left')}
+        ${step('s4', 'Profile: Jordan · ••••4567', 'SkyMiles number and contact details')}
+      </div></div>`)}
+      ${item('c2', `<div class="row recv"><div class="card"><div class="ttl">Ready to file</div>
+        <div class="line">DL 1234 · ATL → LAX · STFORB<small>Jordan Lee · one request</small></div>
+        <div class="q">Confirm the bag took over 20 minutes and I’ll file for <b>2,500 SkyMiles</b>?</div>
+      </div></div>`)}
+      ${sent('m2', SENT2)}
+      ${item('d2meta', `<div class="meta">Delivered</div>`)}
+      ${dots('t2')}
+      ${item('c3', `<div class="row recv"><div class="card"><div class="ttl">Filing</div>
+        ${step('s5', 'Filling Delta’s form on delta.com', 'One request, for Jordan')}
+      </div></div>`)}
+      ${recv('m3', 'Submitted. Delta says <b>“Claim Successful.”</b> 2,500 SkyMiles should post in a few days.')}
+    </div>
+    <div class="inbar"><div class="plus"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div class="field" id="field"><span class="ph" id="ph">Message</span><span id="typed"></span><span class="mic" id="mic">${micIcon}</span><span class="send hide" id="sendBtn">${sendIcon}</span></div></div>
+    <div class="home"><i></i></div>
+  </div></div>`;
+}
+
+function copyHTML(k){
+  const og = k==='og', sp = k==='split';
+  const s = og ? {h1:72, big:36, from:28, sub:20, lh:27, mh:32, slot:54, cap:12, g1:16, g2:16, g3:8, g4:24, g5:12, g6:24, qr:98, u1:16, u2:14}
+          : sp ? {h1:100, big:50, from:36, sub:26, lh:35, mh:44, slot:80, cap:15, g1:72, g2:32, g3:14, g4:56, g5:20, g6:36, qr:130, u1:20, u2:17}
+          :      {h1:88, big:44, from:32, sub:23, lh:31, mh:40, slot:72, cap:14, g1:64, g2:28, g3:12, g4:48, g5:18, g6:32, qr:123, u1:18, u2:16};
+  return `<div class="brand">${tagSVG}<div>Delta Bags<small>Open-source agent skill</small></div></div>
+    <h1 style="font-size:${s.h1}px;margin-top:${s.g1}px">Late bag?<br>Text your agent.</h1>
+    <div class="reward" style="margin-top:${s.g2}px"><div class="big" style="font-size:${s.big}px">2,500 SkyMiles <span style="font-size:${s.from}px">from Delta</span></div>
+      <div class="sub" style="font-size:${s.sub}px;line-height:${s.lh}px;margin-top:${s.g3}px">For eligible checked bags delayed over 20 minutes.<br>Your agent checks the rules and files the request.</div></div>
+    <div class="works" style="margin-top:${s.g4}px;--mh:${s.mh}px;--slot:${s.slot}px;--cap:${s.cap}px"><div class="lbl" style="font-size:${s.cap+2}px;margin-bottom:${s.g5}px">Works with the agent you already have</div>
+      <div class="marks">${LOGOS.map(l=>`<div class="mark"><div class="box"><img src="${l.src}" class="${l.raw?'raw':''}" style="${l.h?`height:${Math.round(l.h*100)}%`:''}"></div><span>${l.name}</span></div>`).join('')}</div></div>
+    <div class="foot" style="margin-top:${s.g6}px"><div class="qr" style="width:${s.qr}px;height:${s.qr}px">${QR_SRC}</div><div><div class="u1" style="font-size:${s.u1}px">github.com/thisiszinger/delta-bags-skill</div><div class="u2" style="font-size:${s.u2}px">Scan, or tell your agent to install it from the link.</div><div class="u2" style="font-size:${s.u2}px">Illustrative conversation · Not affiliated with Delta</div></div></div>`;
+}
+
+// ---------- layout ----------
+const stage = document.getElementById('stage');
+stage.style.width = W+'px'; stage.style.height = H+'px';
+const STILL = LAYOUT==='launch' || LAYOUT==='og';
+if (STILL) stage.classList.add('still');
+const cam = (x,y,s=1) => `<div class="cam" id="cam" style="left:${x}px;top:${y}px;width:421px;height:861px;transform:scale(${s})">${phoneHTML()}</div>`;
+const lug = (x,y,w,h) => NOLUG ? '' : `<div class="lug" id="lug" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"></div>`;
+let html = '';
+if (LAYOUT==='launch')      html = `<div class="copy" style="left:96px;top:64px;width:900px">${copyHTML('launch')}</div>` + lug(770,540,400,340) + cam(1150,72,0.95);
+else if (LAYOUT==='og')     html = `<div class="copy" style="left:64px;top:44px;width:760px">${copyHTML('og')}</div>` + lug(690,420,280,230) + cam(910,44,0.8);
+else if (LAYOUT==='split')  html = `<div class="copy" style="left:120px;top:96px;width:1040px">${copyHTML('split')}</div>` + lug(820,700,460,380) + cam(1300,100,1.0) + `<div class="fade" id="fade"></div>`;
+else if (LAYOUT==='phone')  html = lug(430,660,460,380) + cam((W-421)/2,(H-861)/2,1.0) + `<div class="caption" style="left:0;right:0;bottom:34px;text-align:center">Illustrative conversation · Delta Bags · github.com/thisiszinger/delta-bags-skill</div><div class="fade" id="fade"></div>`;
+stage.innerHTML = html;
+const $ = id => document.getElementById(id);
+
+let LUG = null;
+if ($('lug')) { const r = $('lug').getBoundingClientRect(); LUG = await createLuggage($('lug'), { width: Math.round(r.width), height: Math.round(r.height), dpr: STILL ? 2 : 1 }); }
+
+// ---------- animation engine ----------
+const ease = x => x<0?0:x>1?1:(x<.5 ? 4*x*x*x : 1-Math.pow(-2*x+2,3)/2);
+const outCubic = x => x<0?0:x>1?1:1-Math.pow(1-x,3);
+const ITEMS = [...document.querySelectorAll('.item')];
+const NAT = new Map();
+function measure(){
+  ITEMS.forEach(el=>{ el.style.height=''; el.style.display=''; el.firstElementChild.style.opacity=''; el.firstElementChild.style.transform=''; });
+  ITEMS.forEach(el=>NAT.set(el, el.offsetHeight));
+}
+measure();
+function show(el, t0, t, t1=Infinity){
+  const inner = el.firstElementChild;
+  if (t < t0 || t > t1 + 0.26){ el.style.display='none'; return; }
+  el.style.display='';
+  let p, o;
+  if (t <= t1){ p = outCubic((t - t0)/0.32); o = Math.min(1, (t - t0)/0.16); }
+  else { p = 1 - outCubic((t - t1)/0.26); o = p; }
+  const h = NAT.get(el);
+  el.style.height = (p >= 1 ? h : h*p) + 'px';
+  inner.style.opacity = Math.max(0, Math.min(1, o)).toFixed(3);
+  inner.style.transform = `translateY(${((1-p)*6).toFixed(2)}px)`;
+}
+function stepState(id, tStart, tDone, t){
+  const i = $(id+'i'); if (!i) return;
+  if (t >= tDone){ i.className='ok'; i.innerHTML = tick; i.style.transform=''; }
+  else { i.className='run'; i.innerHTML=''; i.style.transform = `rotate(${((t - tStart)*360)%360}deg)`; }
+}
+function typingDots(el, t){
+  el.querySelectorAll('.typing i').forEach((d,i)=>{ const ph=((t*1.6 - i*0.18)%1+1)%1; d.style.opacity=(0.35+0.65*Math.max(0,Math.sin(ph*Math.PI*2))).toFixed(2); });
+}
+function composer(span, text, t, sentAt){
+  let shown=''; if (t>=span[0] && t<sentAt){ const p=Math.min(1,(t-span[0])/(span[1]-span[0])); shown=text.slice(0, Math.round(p*text.length)); }
+  $('typed').textContent=shown; $('ph').classList.toggle('hide',shown.length>0); $('mic').classList.toggle('hide',shown.length>0); $('sendBtn').classList.toggle('hide',shown.length===0);
+}
+
+// camera keyframes: z = zoom, f = element to center (explicit cards only). Zoom transitions take 0.9 s.
+const ZMAX = LAYOUT==='phone' ? 1.4 : 1.32;
+const CAMS = {
+  split:[{t:0,z:1,f:null},{t:2.6,z:1,f:null},{t:3.5,z:ZMAX,f:'c1'},{t:7.8,z:ZMAX,f:'c1'},{t:8.7,z:ZMAX,f:'c2'},
+         {t:11.2,z:ZMAX,f:'c2'},{t:12.1,z:ZMAX,f:'c3'},{t:13.3,z:ZMAX,f:'c3'},{t:14.2,z:ZMAX,f:'m3'},{t:17.3,z:ZMAX,f:'m3'},{t:18.2,z:1,f:null}],
+  phone:[{t:0,z:1.12,f:null},{t:2.6,z:1.12,f:null},{t:3.5,z:ZMAX,f:'c1'},{t:7.8,z:ZMAX,f:'c1'},{t:8.7,z:ZMAX,f:'c2'},
+         {t:11.2,z:ZMAX,f:'c2'},{t:12.1,z:ZMAX,f:'c3'},{t:13.3,z:ZMAX,f:'c3'},{t:14.2,z:ZMAX,f:'m3'},{t:17.3,z:ZMAX,f:'m3'},{t:18.2,z:1.12,f:null}],
+  launch:[{t:0,z:1,f:null}], og:[{t:0,z:1,f:null}],
+};
+function focusPoint(f){
+  const c=$('cam'); const saved=c.style.transform; c.style.transform='none'; const c0=c.getBoundingClientRect();
+  let pt=[210.5, 430];
+  const el = f ? $(f) : null;
+  if (el && el.style.display!=='none'){ const r=el.getBoundingClientRect(); pt=[210.5, r.top + r.height/2 - c0.top]; }
+  else if (el){ pt=[210.5, 700]; }
+  c.style.transform=saved; return pt;
+}
+function camera(t){
+  const c=$('cam'); const kf=CAMS[LAYOUT]; if(!c||kf.length<2) return;
+  let a=kf[0], b=kf[kf.length-1];
+  for (let i=0;i<kf.length-1;i++){ if (t>=kf[i].t && t<=kf[i+1].t){ a=kf[i]; b=kf[i+1]; break; } }
+  if (t>b.t) a=b;
+  const p = a===b ? 1 : ease((t-a.t)/(b.t-a.t));
+  const fa=focusPoint(a.f), fb=focusPoint(b.f);
+  const z = a.z+(b.z-a.z)*p;
+  let fy = fa[1]+(fb[1]-fa[1])*p;
+  const camTop = parseFloat(c.style.top);
+  const viewH = H / z;
+  fy = Math.max(viewH/2 - 30, Math.min(fy, 861 - viewH/2 + 30));
+  const k = Math.max(0, Math.min(1, (z - 1) / 0.12));
+  const dyZoom = H/2 - (camTop + fy*z);
+  const dyRest = camTop - camTop*z;
+  const dy = dyRest + (dyZoom - dyRest) * k;
+  const dx = 210.5 - 210.5*z;
+  c.style.transform = `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px) scale(${z.toFixed(4)})`;
+}
+
+window.seek = function(t){
+  t = Math.max(0, Math.min(DURATION, t));
+  if (STILL) t = T.hold - 0.2;
+  composer(T.type1, SENT1, t, T.send1);
+  if (t>=T.type2[0]) composer(T.type2, SENT2, t, T.send2);
+  const never = Infinity;
+  show($('m1'), T.send1, t);
+  show($('d1meta'), STILL ? never : T.deliv1, t, T.send2+0.3);
+  show($('t1'), STILL ? never : T.dots1[0], t, T.dots1[1]-0.26); typingDots($('t1'), t);
+  show($('c1'), T.card1, t);
+  show($('s1'), T.s1, t);   stepState('s1', T.s1, T.s1ok, t);
+  show($('s2'), T.s2, t);   stepState('s2', T.s2, T.s2+0.35, t);
+  show($('s3'), T.s3, t);   stepState('s3', T.s3, T.s3+0.45, t);
+  show($('s4'), T.s4, t);   stepState('s4', T.s4, T.s4+0.35, t);
+  show($('c2'), T.card2, t);
+  show($('m2'), T.send2, t);
+  show($('d2meta'), STILL ? never : T.send2+0.4, t);
+  show($('t2'), STILL ? never : T.dots2[0], t, T.dots2[1]-0.26); typingDots($('t2'), t);
+  show($('c3'), STILL ? never : T.card3, t);
+  show($('s5'), T.card3, t); stepState('s5', T.card3, T.s5ok, t);
+  show($('m3'), T.final, t);
+  if (!STILL) camera(t);
+  if (LUG){ LUG.seek(STILL ? 10 : Math.max(0, t - T.lug)); LUG.render(); }
+  const fade=$('fade');
+  if (fade){ let o=0; if (t<0.4) o=1-t/0.4; else if (t>T.hold) o=(t-T.hold)/(DURATION-T.hold); fade.style.opacity=Math.max(0,Math.min(1,o)).toFixed(3); }
+  return t;
+};
+window.DURATION = DURATION;
+await document.fonts.ready; await new Promise(r=>setTimeout(r,150)); measure();
+seek(Number(Q.get('t')||0)); window.ready = true;
+</script>
+</body>
+</html>

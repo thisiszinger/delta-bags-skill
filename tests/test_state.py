@@ -188,10 +188,13 @@ class LedgerTests(unittest.TestCase):
         )
 
     def record_arguments(self) -> list[str]:
+        # Use a recent timestamp so the 30-day prune never removes the entry
+        # before the duplicate check runs, regardless of today's date.
+        recent = datetime.now(timezone.utc) - timedelta(hours=1)
         return [
             "record-submission",
             "--flight-date",
-            "2026-08-15",
+            recent.date().isoformat(),
             "--departure",
             "atl",
             "--arrival",
@@ -201,7 +204,7 @@ class LedgerTests(unittest.TestCase):
             "--outcome",
             "approved",
             "--submitted-at",
-            "2026-08-15T12:00:00Z",
+            state._format_timestamp(recent),
         ]
 
     def test_duplicate_requires_explicit_override_and_omits_confirmation(self) -> None:

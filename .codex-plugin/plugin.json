@@ -1,6 +1,6 @@
 {
   "name": "delta-bags",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Prepare, verify, and submit Delta Air Lines 20-Minute Bag Guarantee Requests.",
   "author": {
     "name": "Zinger",

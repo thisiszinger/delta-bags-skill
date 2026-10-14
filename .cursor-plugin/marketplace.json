@@ -1,0 +1,22 @@
+{
+  "name": "delta-bags-skill",
+  "owner": { "name": "Zinger" },
+  "metadata": {
+    "description": "Cursor and Grok Bot distribution for the Delta Bags skill.",
+    "version": "0.2.0"
+  },
+  "plugins": [
+    {
+      "name": "delta-bags",
+      "source": "./",
+      "description": "Prepare, verify, and submit Delta Air Lines 20-Minute Bag Guarantee Requests.",
+      "version": "0.2.0",
+      "homepage": "https://github.com/thisiszinger/delta-bags-skill#readme",
+      "repository": "https://github.com/thisiszinger/delta-bags-skill",
+      "license": "MIT",
+      "category": "Travel",
+      "tags": ["delta-air-lines", "travel", "baggage", "skymiles"],
+      "skills": "./skills/"
+    }
+  ]
+}
