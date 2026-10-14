@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/launch.png" alt="Late bag? Text your agent. An iPhone shows a traveler texting their agent that a bag took 40 minutes at LAX; the agent confirms the flight, files Delta's bag guarantee request, and reports Delta's Claim Successful response. Bring your own agent: Muse, ChatGPT, Grok Bot, Instinct, OpenClaw, Hermes, Orchid, Tab." width="100%">
+  <img src="assets/launch.png" alt="Late bag? Text your agent. 2,500 SkyMiles from Delta for eligible checked bags delayed over 20 minutes. An iPhone shows a thread with your agent: it checks email and calendar for the flight, the landing and bag times, Delta's live terms, and your SkyMiles profile, asks once, files the request, and relays Delta's Claim Successful response. Works with ChatGPT, Claude, Muse, Grok Bot, Instinct, Hermes, Orchid, Tab, OpenClaw, Poke." width="100%">
 </p>
 
 # Delta Bags
@@ -16,7 +16,33 @@ Delta Bags is an open-source [Agent Skill](https://agentskills.io) that teaches 
 
 ## Install
 
-Using a personal agent you text, like Hermes, OpenClaw, Muse, ChatGPT, Grok Bot, Instinct, Orchid, or Tab? Skip the terminal and use the paste-in prompt below. Hermes and OpenClaw also have native installers in the table further down.
+### Personal agents
+
+Most people will do this from the agent they already text. Send it this, in your own words:
+
+```text
+Install the Agent Skill "delta-bags" from https://github.com/thisiszinger/delta-bags-skill
+(the skill folder is skills/delta-bags). Use it whenever I mention a late Delta bag.
+```
+
+What happens next depends on the agent. Checked against each product's docs on 2026-10-14; "reported" means we found it in reviews or user posts but not in official docs. The skill itself needs a browser to submit Delta's form, so agents without one can prepare the request but you press submit.
+
+| Agent | How it takes the skill | Can it file the form? |
+| --- | --- | --- |
+| Hermes Agent | Native. `/skills install thisiszinger/delta-bags-skill/skills/delta-bags` in any chat channel, or ask it. Picks the skill up on its own when you mention a late bag. | Yes, browser tool |
+| OpenClaw | Native. Ask it to clone the repo and run `openclaw skills install ./delta-bags-skill/skills/delta-bags --global`. | Yes, gateway browser |
+| Claude | Native. In the Claude app: Customize › Skills › Upload a zip of `skills/delta-bags`, then it syncs to Cowork, Chrome, and Claude Code. In Claude Code: `/plugin marketplace add thisiszinger/delta-bags-skill` then `/plugin install delta-bags@delta-bags-skill`. | Yes, Claude in Chrome (paid plans) |
+| ChatGPT | Native on Business, Enterprise, and Edu: Plugins › Skills › Create or Upload the `skills/delta-bags` folder. On Plus and Pro, paste `SKILL.md` into a Project's instructions or ask it to remember the link. | Yes, ChatGPT Work's cloud browser (paid plans) |
+| Grok Bot | Ask it to clone the repo and save `SKILL.md` as a skill, then invoke with `/delta-bags`. The repo also ships a Cursor plugin manifest, which Grok Bot can import. | Yes, its cloud computer |
+| Muse (Meta) | Paste the `SKILL.md` link and ask Muse to save it as a reusable skill (reported, not documented). | Yes, Secure VM browser |
+| Tab | Ask it to open `SKILL.md`, read the references, and remember it as its procedure. | Yes, its own browser |
+| Instinct | Ask it to remember the instructions at the `SKILL.md` link. | Reported, not documented |
+| Poke | Ask it to remember the instructions; it can pull the flight from Gmail and draft every answer. | No browser documented: drafts, you submit |
+| Orchid | Memory only. | No browser documented: drafts, you submit |
+
+Full findings, with sources, are in [`docs/research/personal-agents-2026-10.md`](docs/research/personal-agents-2026-10.md).
+
+### Coding agents and CLIs
 
 One command, any agent with a skills folder. The installer detects what you have (Claude Code, Codex, Gemini CLI, Cursor, Copilot, Hermes, OpenClaw, Grok Build, OpenCode, Windsurf, Warp, Zed, Amp, Antigravity, Kiro, Devin, Junie, Vibe, and about 60 more):
 
@@ -75,7 +101,7 @@ Anything else that implements the [Agent Skills specification](https://agentskil
 
 ## How it works
 
-<p align="center"><img src="assets/loop.gif" alt="Demo on an iPhone: you text your agent that the bag took 40 minutes at LAX, the agent confirms the flight and files the request, and Delta replies Claim Successful" width="800"></p>
+<p align="center"><img src="assets/loop.gif" alt="Demo on an iPhone: you text your agent that the bag took 40 minutes at LAX; it checks your email and calendar, the bag times, Delta's live terms and your profile, asks once, files the request, and relays Delta's Claim Successful response" width="800"></p>
 
 The conversation above is illustrative. A real run looks like this in any chat-based agent:
 

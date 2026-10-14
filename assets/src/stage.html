@@ -2,336 +2,319 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <style>
-  :root{
-    --navy:#0B2A5B; --red:#E3132C;
-    --ios-blue:#1B86F7; --ios-gray:#E9E9EB; --ios-text:#111; --ios-muted:#8E8E93;
-  }
+  :root{ --navy:#0B2A5B; --ink:#FFFFFF; --ink2:#C7D2EE; --ink3:#8FA3CC; --blue:#1B86F7; }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{overflow:hidden;background:var(--navy)}
-  body{-webkit-font-smoothing:antialiased}
-  .stage{position:relative;overflow:hidden}
+  body{-webkit-font-smoothing:antialiased;font-family:'Hanken Grotesk',system-ui,sans-serif;color:var(--ink)}
+  .stage{position:relative;overflow:hidden;background:var(--navy)}
 
-  /* ===== THEME navy: one field, Hanken Grotesk ===== */
-  .t-navy{background:var(--navy);color:#fff;font-family:'Hanken Grotesk',system-ui,sans-serif}
-  .t-navy .brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:22px;letter-spacing:-.01em}
-  .t-navy h1{font-weight:700;letter-spacing:-.03em;line-height:1.0}
-  .t-navy .sub{color:#DCE5F2;line-height:1.35;letter-spacing:-.005em}
-  .t-navy .lbl{font-size:16px;color:#C7D2EE;margin-bottom:16px}
-  .t-navy .logo .name{color:#DCE5F2}
-  .t-navy .foot{color:#C7D2EE} .t-navy .foot b{color:#fff;font-weight:500}
-  .t-navy .brand small{display:block;font-size:16px;font-weight:400;color:#C7D2EE;margin-top:4px}
-  .t-navy .brand{align-items:flex-start}
-  .t-navy .sub b{color:#fff;font-weight:600}
-
-  /* ===== THEME light: white field + navy panel, Barlow Condensed ===== */
-  .t-light{background:#fff;color:#003268;font-family:'Source Sans 3',system-ui,sans-serif}
-  .t-light .panel{position:absolute;top:0;bottom:0;right:0;background:#003268;border-top:12px solid var(--red)}
-  .t-light .brand{font-weight:700;font-size:30px;color:#003268;letter-spacing:-.01em;line-height:1.1}
-  .t-light .brand small{display:block;font-size:15px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#52647C;margin-top:4px}
-  .t-light .brand .tag{display:none}
-  .t-light h1{font-family:'Barlow Condensed',sans-serif;font-weight:600;line-height:.95;letter-spacing:-.005em;color:#003268}
-  .t-light h1 span{color:var(--red)}
-  .t-light .sub{color:#003268;line-height:1.3}
-  .t-light .fact{border-left:4px solid var(--red);padding-left:22px;margin-top:30px}
-  .t-light.og .fact{margin-top:18px}
-  .t-light .brand{margin-bottom:24px}
-  .t-light .fact b{display:block;font-size:34px;font-weight:700;color:#003268;line-height:1.1}
-  .t-light .fact span{display:block;font-size:21px;color:#52647C;margin-top:4px}
-  .t-light .lbl{font-size:15px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#003268;margin-bottom:16px}
-  .t-light .logo .mark{box-shadow:0 0 0 1px rgba(0,50,104,.14)}
-  .t-light .logo .name{color:#003268;font-weight:600}
-  .t-light .foot{color:#52647C} .t-light .foot b{color:#003268;font-weight:600}
-
-  /* ===== THEME miles: navy, DM Serif numeral ===== */
-  .t-miles{background:#0B1F66;color:#fff;font-family:'Source Sans 3',system-ui,sans-serif}
-  .t-miles .edge{position:absolute;left:0;top:0;bottom:0;width:16px;background:var(--red)}
-  .t-miles .brand{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:30px;padding-bottom:14px;border-bottom:1px solid #5B6C9B}
-  .t-miles .brand .tag{display:none}
-  .t-miles .brand small{font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#C7D2EE}
-  .t-miles .lead{font-size:32px;color:#fff;margin-top:auto}
-  .t-miles.og .lead{font-size:26px}
-  .t-miles.og .unit{font-size:40px;padding-bottom:8px}
-  .t-miles.og .sub{font-size:24px;margin-top:16px}
-  .t-miles.og .qual{font-size:18px}
-  .t-miles.og .brand{font-size:26px;padding-bottom:10px}
-  .t-miles .num{font-family:'DM Serif Display',serif;line-height:.9;letter-spacing:-.01em;margin-top:6px}
-  .t-miles .unit{font-size:48px;font-weight:700;line-height:1.1;padding-bottom:12px;border-bottom:4px solid var(--red);width:max-content}
-  .t-miles .sub{font-size:30px;margin-top:24px;color:#fff}
-  .t-miles .qual{font-size:22px;color:#C7D2EE;margin-top:6px}
-  .t-miles .lbl{font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#C7D2EE;margin-bottom:16px}
-  .t-miles .logo .name{color:#fff;font-weight:600}
-  .t-miles .foot{color:#C7D2EE} .t-miles .foot b{color:#fff;font-weight:600}
-
-  /* shared copy block */
+  /* ---------- copy ---------- */
   .copy{position:absolute;display:flex;flex-direction:column}
-  .copy h1{margin-top:auto}
-  .works{margin-top:auto;padding-top:36px}
-  .logos{display:flex;gap:var(--lg,22px);align-items:flex-start}
-  .logo{display:flex;flex-direction:column;align-items:center;gap:8px;width:var(--lw,82px)}
-  .logo .mark{width:var(--ls,70px);height:var(--ls,70px);border-radius:calc(var(--ls,62px)*.24);background:#fff;display:grid;place-items:center;overflow:hidden}
-  .logo .mark img{width:100%;height:100%;object-fit:cover;display:block}
-  .logo .mark.pad img{width:66%;height:66%;object-fit:contain}
-  .logo .mark.inset img{width:92%;height:92%;border-radius:inherit}
-  .logo .name{font-size:16px;white-space:nowrap}
-  .foot{display:flex;justify-content:space-between;align-items:baseline;font-size:18px;margin-top:28px}
-  .stage.og .foot{font-size:16px;margin-top:20px}
-  .stage.og .works{padding-top:22px}
-  .tag{width:30px;height:30px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:22px;letter-spacing:-.01em}
+  .brand small{display:block;font-size:15px;font-weight:400;color:var(--ink2);margin-top:2px}
+  .brand .tag{width:30px;height:30px;flex:none}
+  h1{font-weight:700;letter-spacing:-.035em;line-height:.98}
+  .reward{display:flex;flex-direction:column}
+  .reward .big{font-weight:600;letter-spacing:-.02em;line-height:1.1}
+  .reward .big span{color:var(--ink2);font-weight:400}
+  .reward .sub{color:var(--ink2)}
+  .works .lbl{color:var(--ink2)}
+  .marks{display:flex;align-items:flex-end;gap:8px}
+  .mark{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:12px;width:var(--slot,72px)}
+  .mark .box{height:var(--mh,40px);display:flex;align-items:center;justify-content:center}
+  .mark img{height:100%;width:auto;max-width:64px;display:block;filter:brightness(0) invert(1);opacity:.95}
+  .mark img.raw{filter:none}
+  .mark span{font-size:var(--cap,14px);color:var(--ink3);white-space:nowrap}
+  .foot{display:flex;align-items:center;gap:18px}
+  .foot .qr{flex:none;background:#F3EFE6;border-radius:12px;padding:8px}
+  .foot .qr svg{display:block;width:100%;height:100%}
+  .foot .u1{font-weight:500}
+  .foot .u2{color:var(--ink3);margin-top:4px}
 
-  /* ===== phone ===== */
-  .cam{position:absolute;will-change:transform}
-  .phone{position:relative;width:421px;height:880px;border-radius:62px;background:#1a1a1c;
-         box-shadow:0 0 0 1.5px rgba(255,255,255,.22), 0 40px 90px rgba(0,0,0,.45), 0 10px 24px rgba(0,0,0,.3)}
-  .screen{position:absolute;inset:14px;border-radius:50px;background:#fff;overflow:hidden;font-family:Inter,-apple-system,system-ui,sans-serif;color:var(--ios-text);display:flex;flex-direction:column}
-  .island{position:absolute;left:50%;top:11px;transform:translateX(-50%);width:126px;height:37px;border-radius:20px;background:#000;z-index:3}
-  .status{height:54px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 32px 6px 36px;font-weight:600;font-size:16px}
+  /* ---------- luggage ---------- */
+  .lug{position:absolute;pointer-events:none}
+  .lug canvas{display:block}
+
+  /* ---------- phone ---------- */
+  .cam{position:absolute;transform-origin:0 0}
+  .phone{position:relative;width:421px;height:861px;filter:drop-shadow(0 40px 60px rgba(0,0,0,.45)) drop-shadow(0 10px 20px rgba(0,0,0,.3))}
+  .phone .frame{position:absolute;left:0;top:0;width:421px;height:861px;z-index:5;pointer-events:none}
+  .screen{position:absolute;left:22.5px;top:21.5px;width:376px;height:818px;border-radius:56px;background:#fff;overflow:hidden;font-family:Inter,-apple-system,system-ui,sans-serif;color:#111;display:flex;flex-direction:column}
+  .status{height:50px;display:flex;justify-content:space-between;align-items:center;padding:5px 27px 0 46px;font-weight:600;font-size:16px;letter-spacing:-.01em}
+  .status .r{display:flex;align-items:center;gap:6px}
   .status svg{display:block}
-  .hdr{display:flex;flex-direction:column;align-items:center;padding:4px 0 10px;background:rgba(249,249,249,.94);border-bottom:.5px solid rgba(0,0,0,.14);position:relative}
-  .hdr .back{position:absolute;left:14px;top:10px;color:var(--ios-blue)}
-  .hdr .vid{position:absolute;right:16px;top:14px;color:var(--ios-blue)}
-  .hdr .av{width:50px;height:50px;border-radius:50%;background:linear-gradient(#A8ADB8,#8A8F9A);color:#fff;display:grid;place-items:center;font-weight:500;font-size:22px;overflow:hidden}
-  .hdr .av img{width:50px;height:50px;object-fit:cover}
-  .hdr .nm{font-size:11.5px;margin-top:5px;color:#222;display:flex;align-items:center;gap:2px}
-  .thread{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 16px 8px;gap:3px}
-  .stage.top .thread{justify-content:flex-start;padding-top:14px}
-  .stage.top .inbar,.stage.top .home{display:none}
-  .stamp{align-self:center;font-size:12px;color:var(--ios-muted);margin:0 0 10px}
-  .stamp b{font-weight:600}
-  .row{display:flex;max-width:100%}
+  .hdr{height:58px;display:flex;align-items:center;padding:0 18px;background:rgba(250,250,251,.96);border-bottom:.5px solid rgba(0,0,0,.12);position:relative;z-index:2;gap:10px}
+  .hdr .ic{color:var(--blue);width:22px}
+  .hdr .av{width:34px;height:34px;border-radius:50%;background:#E6E9EF;display:grid;place-items:center;margin-left:auto}
+  .hdr .nm{font-size:16px;font-weight:600;color:#111;margin-right:auto}
+  .thread{flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding:0 12px 10px;overflow:hidden}
+  .stage.still .thread{justify-content:flex-start;padding-top:12px}
+  .stage.still .inbar,.stage.still .home{display:none}
+  .stage.still .step small,.stage.still .card .line small{display:none}
+  .stage.still .step{padding:4px 0}
+  .item{overflow:hidden;flex:none}
+  .item>div{padding-top:6px}
+  .row{display:flex;width:100%}
   .row.sent{justify-content:flex-end}
   .row.recv{justify-content:flex-start}
-  .bub{position:relative;max-width:82%;padding:9px 14px 10px;border-radius:21px;font-size:21px;line-height:1.25;letter-spacing:-.01em;transform-origin:bottom right}
-  .recv .bub{transform-origin:bottom left}
-  .sent .bub{background:var(--ios-blue);color:#fff}
-  .recv .bub{background:var(--ios-gray);color:var(--ios-text)}
-  .bub .tail{position:absolute;bottom:-1px;width:18px;height:18px}
-  .sent .bub .tail{right:-6px}
-  .recv .bub .tail{left:-6px;transform:scaleX(-1)}
+  .bub{max-width:92%;padding:10px 14px 11px;border-radius:18px;font-size:22px;line-height:1.25;letter-spacing:-.012em}
+  .sent .bub{background:var(--blue);color:#fff}
+  .recv .bub{background:#EEEEF1;color:#111}
   .bub b{font-weight:600}
-  .meta{align-self:flex-end;font-size:12px;color:var(--ios-muted);margin:1px 6px 6px 0;font-weight:500}
-  .typing{display:inline-flex;gap:5px;align-items:center;height:22px}
-  .typing i{width:9px;height:9px;border-radius:50%;background:#8E8E93;display:block}
-  .gap{height:8px}
-  .inbar{display:flex;align-items:center;gap:10px;padding:6px 14px 8px}
-  .plus{width:34px;height:34px;border-radius:50%;background:#E9E9EB;display:grid;place-items:center;color:#6b6b70}
-  .field{flex:1;height:36px;border:1px solid rgba(0,0,0,.18);border-radius:18px;display:flex;align-items:center;padding:0 12px;font-size:17px;color:var(--ios-text);position:relative;white-space:nowrap;overflow:hidden}
+  .meta{text-align:right;font-size:12px;color:#8E8E93;padding:2px 6px 0 0;font-weight:500}
+  .typing{display:inline-flex;gap:5px;align-items:center;height:26px}
+  .typing i{width:9px;height:9px;border-radius:50%;background:#9A9AA0;display:block}
+  .card{max-width:92%;background:#fff;border:1px solid #E3E5EA;border-radius:18px;padding:10px 12px 8px;font-size:19px;line-height:1.2;color:#111}
+  .card .ttl{font-size:13px;font-weight:600;color:#6B7280;letter-spacing:.02em;text-transform:uppercase;padding-bottom:4px}
+  .step{display:flex;gap:9px;align-items:flex-start;padding:5px 0}
+  .step i{flex:none;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;margin-top:2px}
+  .step i.ok{background:#1B86F7}
+  .step i.run{border:2px solid #C9CDD6;border-top-color:#1B86F7}
+  .step .tx{color:#111}
+  .step .tx small{display:block;color:#6B7280;font-size:16px;margin-top:1px;line-height:1.2}
+  .card .q{padding-top:8px;border-top:1px solid #EEF0F3;margin-top:4px;color:#111}
+  .card .line{padding:3px 0;color:#111}
+  .card .line small{color:#6B7280;font-size:16px;display:block}
+  .inbar{display:flex;align-items:center;gap:10px;padding:8px 12px 8px}
+  .plus{width:34px;height:34px;border-radius:50%;background:#EEEEF1;display:grid;place-items:center;color:#6b6b70;flex:none}
+  .field{flex:1;height:40px;border:1px solid rgba(0,0,0,.16);border-radius:20px;display:flex;align-items:center;padding:0 14px;font-size:19px;color:#111;position:relative;white-space:nowrap;overflow:hidden}
   .field .ph{color:#9a9aa0}
-  .field .send{position:absolute;right:3px;top:3px;width:28px;height:28px;border-radius:50%;background:var(--ios-blue);display:grid;place-items:center}
-  .field .mic{position:absolute;right:11px;top:9px;color:#9a9aa0}
-  .home{height:28px;display:grid;place-items:center}
+  .field .send{position:absolute;right:5px;top:5px;width:28px;height:28px;border-radius:50%;background:var(--blue);display:grid;place-items:center}
+  .field .mic{position:absolute;right:13px;top:11px;color:#9a9aa0}
+  .home{height:30px;display:grid;place-items:center}
   .home i{display:block;width:134px;height:5px;border-radius:3px;background:#111}
   .hide{display:none !important}
-  .fade{position:absolute;inset:0;pointer-events:none}
-  .caption{position:absolute;font-size:17px;color:rgba(255,255,255,.55);font-family:'Hanken Grotesk',system-ui,sans-serif}
+  .fade{position:absolute;inset:0;pointer-events:none;background:var(--navy)}
+  .caption{position:absolute;font-size:16px;color:var(--ink3)}
 </style>
 </head>
 <body>
 <div id="stage" class="stage"></div>
-<script>
+<script type="module">
+import { createLuggage } from './luggage.js';
 const Q = new URLSearchParams(location.search);
-const LAYOUT = Q.get('layout') || 'launch';          // launch | og | split | phone
-const THEME  = Q.get('theme')  || 'navy';            // navy | light | miles
-const AGENT = Q.get('agent') || 'Agent';
-const AGENT_IMG = Q.get('agentImg') || '';
-const L = 'logos/';
-const LOGOS = JSON.parse(Q.get('logos') || 'null') || [
-  {name:'Muse',     src:L+'muse-appicon.png'},
-  {name:'ChatGPT',  src:L+'chatgpt-openai.svg'},
-  {name:'Grok Bot', src:L+'grokbot-appicon.png'},
-  {name:'Instinct', src:L+'instinct.svg'},
-  {name:'OpenClaw', src:L+'openclaw-appicon.png'},
-  {name:'Hermes',   src:L+'hermes.svg', inset:true},
-  {name:'Orchid',   src:L+'orchid.svg', pad:true},
-  {name:'Tab',      src:L+'tab-appicon.png'},
-];
+const LAYOUT = Q.get('layout') || 'launch';     // launch | og | split | phone
+const NOLUG = Q.get('luggage') === '0';
 const SIZES = {launch:[1600,900], og:[1280,640], split:[1920,1080], phone:[1920,1080]};
 const [W,H] = SIZES[LAYOUT];
+const L = Q.get('logodir') || 'logos/';
+const LOGOS = JSON.parse(Q.get('logos') || 'null') || [
+  {name:'ChatGPT',  src:L+'chatgpt.svg'},
+  {name:'Claude',   src:L+'claude.svg'},
+  {name:'Muse',     src:L+'muse.svg'},
+  {name:'Grok Bot', src:L+'grok.svg'},
+  {name:'Instinct', src:L+'instinct.svg', h:1.0},
+  {name:'Hermes',   src:L+'hermes.svg', h:0.88},
+  {name:'Orchid',   src:L+'orchid.svg'},
+  {name:'Tab',      src:L+'tab.png', raw:true, h:0.84},
+  {name:'OpenClaw', src:L+'openclaw.svg', h:0.88},
+  {name:'Poke',     src:L+'poke.svg'},
+];
+const QR_SRC = await (await fetch('qr-repo-dark.svg')).text();
 
-// ---------- conversation ----------
+// ---------- script ----------
 const SENT1 = 'bag took 40 min at LAX';
 const SENT2 = 'yes, file it';
-const RECV1 = 'DL 1234 today? That’s past Delta’s 20-minute guarantee: <b>2,500 SkyMiles</b>. File the request?';
-const RECV2 = 'Submitted on delta.com.';
-const RECV3 = 'Delta says “Claim Successful.” <b>2,500 SkyMiles</b> should post in a few days.';
-
 const T = {
-  type1:[0.6, 2.2],   send1:2.5,  deliv1:2.9,
-  dots1:[3.2, 5.0],   recv1:5.0,
-  type2:[6.7, 7.2],   send2:7.5,
-  dots2:[7.9, 10.4],  recv2:10.4,
-  dots3:[10.9, 12.6], recv3:12.6,
-  fadeOut:16.2, end:17.0
+  lug:0.1,
+  type1:[0.8,2.1], send1:2.4, deliv1:2.8,
+  dots1:[3.0,4.2],
+  card1:4.2, s1:4.2, s1ok:5.1, s2:5.6, s3:6.3, s4:7.0,
+  card2:8.2,
+  type2:[9.7,10.15], send2:10.4,
+  dots2:[10.7,11.5],
+  card3:11.5, s5ok:13.0,
+  final:13.5,
+  hold:18.2, end:19.0
 };
 const DURATION = T.end;
 
-const CAMS = {
-  split:[
-    {t:0,s:1,f:null},{t:2.3,s:1,f:null},{t:2.9,s:1.3,f:'b1'},{t:4.8,s:1.3,f:'b1'},{t:5.4,s:1.3,f:'b2'},
-    {t:8.3,s:1.3,f:'b2'},{t:9.0,s:1,f:null},{t:12.4,s:1,f:null},{t:13.0,s:1.34,f:'b5'},{t:15.7,s:1.34,f:'b5'},{t:16.4,s:1,f:null}],
-  phone:[
-    {t:0,s:1.18,f:'field'},{t:2.3,s:1.18,f:'field'},{t:2.9,s:1.6,f:'b1'},{t:4.8,s:1.6,f:'b1'},{t:5.4,s:1.5,f:'b2'},
-    {t:8.5,s:1.5,f:'b2'},{t:9.1,s:1.18,f:'thread'},{t:12.4,s:1.18,f:'thread'},{t:13.0,s:1.65,f:'b5'},{t:15.7,s:1.65,f:'b5'},{t:16.4,s:1.18,f:'field'}],
-  launch:[{t:0,s:1,f:null}], og:[{t:0,s:1,f:null}],
-};
-
-// ---------- svg bits ----------
-const tagSVG = `<svg class="tag" viewBox="0 0 30 30" fill="none"><path d="M9 3h12l6 6v15.5A2.5 2.5 0 0 1 24.5 27h-19A2.5 2.5 0 0 1 3 24.5V9l6-6z" fill="#E3132C"/><circle cx="15" cy="9" r="2.4" fill="#fff"/><path d="M8 17h14M8 21h9" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>`;
-const tail = c=>`<svg class="tail" viewBox="0 0 18 18"><path d="M0 0v10c0 4 3 7.5 8 8-3-1.5-5-4-5-7.5V0z" fill="${c}" transform="translate(6 0)"/></svg>`;
-const chevL = `<svg width="13" height="22" viewBox="0 0 13 22" fill="none"><path d="M11 2 2 11l9 9" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const chevR = `<svg width="7" height="10" viewBox="0 0 7 10"><path d="M1.5 1l4 4-4 4" stroke="#8E8E93" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`;
-const vidIcon = `<svg width="26" height="18" viewBox="0 0 26 18" fill="none"><rect x="1" y="2" width="16" height="14" rx="4" stroke="currentColor" stroke-width="2"/><path d="M17 7l7-4v12l-7-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>`;
-const statusRight = `<svg width="78" height="14" viewBox="0 0 78 14" fill="#111"><rect x="0" y="9" width="3" height="5" rx="1"/><rect x="5" y="6.5" width="3" height="7.5" rx="1"/><rect x="10" y="4" width="3" height="10" rx="1"/><rect x="15" y="1.5" width="3" height="12.5" rx="1"/><path d="M33.5 4.2a8 8 0 0 0-10 0l1.3 1.6a6 6 0 0 1 7.4 0zM31.2 7a4.5 4.5 0 0 0-5.4 0l1.3 1.6a2.5 2.5 0 0 1 2.8 0zm-2.7 2.9a1.3 1.3 0 0 0-1.3 1.3l1.3 1.6 1.3-1.6a1.3 1.3 0 0 0-1.3-1.3z"/><rect x="47" y="1" width="26" height="12" rx="4" stroke="#111" stroke-opacity=".35" fill="none" stroke-width="1.2"/><rect x="49" y="3" width="22" height="8" rx="2.5"/><path d="M75 5v4a2 2 0 0 0 0-4z" fill-opacity=".4"/></svg>`;
+// ---------- svg ----------
+const tagSVG = `<svg class="tag" viewBox="0 0 30 30" fill="none"><path d="M9 3h12l6 6v15.5A2.5 2.5 0 0 1 24.5 27h-19A2.5 2.5 0 0 1 3 24.5V9l6-6z" fill="#C7D2EE"/><circle cx="15" cy="9" r="2.4" fill="#0B2A5B"/><path d="M8 17h14M8 21h9" stroke="#0B2A5B" stroke-width="2" stroke-linecap="round"/></svg>`;
+const chevL = `<svg width="12" height="20" viewBox="0 0 12 20" fill="none"><path d="M10.5 1.5 2 10l8.5 8.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const person = `<svg width="20" height="20" viewBox="0 0 26 26" fill="#8A93A3"><circle cx="13" cy="9" r="5.2"/><path d="M3.5 23c.8-5 4.7-8 9.5-8s8.7 3 9.5 8z"/></svg>`;
+const sigSVG = `<svg width="19" height="12" viewBox="0 0 19 12" fill="#111"><rect x="0" y="8" width="3.4" height="4" rx="1"/><rect x="5.1" y="5.5" width="3.4" height="6.5" rx="1"/><rect x="10.2" y="3" width="3.4" height="9" rx="1"/><rect x="15.3" y="0" width="3.4" height="12" rx="1"/></svg>`;
+const wifiSVG = `<svg width="17" height="12" viewBox="0 0 17 12" fill="#111"><path d="M8.5 11.6 11 8.9a3.6 3.6 0 0 0-5 0z"/><path d="M8.5 6.3c1.5 0 2.9.6 3.9 1.6L14 6.3a7.8 7.8 0 0 0-11 0l1.6 1.6a5.5 5.5 0 0 1 3.9-1.6z"/><path d="M8.5 1.9c2.6 0 5 1 6.8 2.8L17 3.1A12 12 0 0 0 0 3.1l1.7 1.6A9.6 9.6 0 0 1 8.5 1.9z"/></svg>`;
+const batSVG = `<svg width="29" height="13" viewBox="0 0 29 13"><rect x=".5" y=".5" width="24" height="12" rx="3.5" stroke="#111" stroke-opacity=".4" fill="none"/><rect x="2" y="2" width="21" height="9" rx="2" fill="#111"/><path d="M26.2 4.3v4.4c1-.2 1.8-1.1 1.8-2.2s-.8-2-1.8-2.2z" fill="#111" fill-opacity=".4"/></svg>`;
 const sendIcon = `<svg width="14" height="16" viewBox="0 0 14 16" fill="none"><path d="M7 15V1M1.5 6.5 7 1l5.5 5.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const micIcon = `<svg width="14" height="20" viewBox="0 0 14 20" fill="none"><rect x="4" y="1" width="6" height="11" rx="3" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 9.5a5.5 5.5 0 0 0 11 0M7 15v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+const tick = `<svg width="11" height="9" viewBox="0 0 10 8" fill="none"><path d="M1 4.2 3.8 7 9 1.3" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-const logosHTML = () => LOGOS.map(l=>`<div class="logo"><div class="mark ${l.pad?'pad':''} ${l.inset?'inset':''}" style="${l.bg?`background:${l.bg}`:''}"><img src="${l.src}"></div><div class="name">${l.name}</div></div>`).join('');
+const item = (id, inner) => `<div class="item" id="${id}"><div>${inner}</div></div>`;
+const sent = (id, t) => item(id, `<div class="row sent"><div class="bub">${t}</div></div>`);
+const recv = (id, t) => item(id, `<div class="row recv"><div class="bub">${t}</div></div>`);
+const dots = id => item(id, `<div class="row recv"><div class="bub"><span class="typing"><i></i><i></i><i></i></span></div></div>`);
+const step = (id, text, sub='') => `<div class="item" id="${id}"><div class="step"><i class="run" id="${id}i"></i><div class="tx" id="${id}t">${text}${sub?`<small>${sub}</small>`:''}</div></div></div>`;
 
 function phoneHTML(){
-  const avatar = AGENT_IMG ? `<img src="${AGENT_IMG}">` : AGENT[0].toUpperCase();
-  return `<div class="phone"><div class="screen">
-    <div class="island"></div>
-    <div class="status"><span>9:41</span>${statusRight}</div>
-    <div class="hdr"><div class="back">${chevL}</div><div class="av">${avatar}</div><div class="nm">${AGENT} ${chevR}</div><div class="vid">${vidIcon}</div></div>
+  return `<div class="phone"><img class="frame" src="frame.png"><div class="screen">
+    <div class="status"><span>9:41</span><span class="r">${sigSVG}${wifiSVG}${batSVG}</span></div>
+    <div class="hdr"><div class="ic">${chevL}</div><div class="av">${person}</div><div class="nm">Your agent</div></div>
     <div class="thread" id="thread">
-      <div class="stamp"><b>Today</b> 4:12 PM</div>
-      <div class="row sent" id="r1"><div class="bub" id="b1">${SENT1}${tail('#1B86F7')}</div></div>
-      <div class="meta" id="m1">Delivered</div>
-      <div class="row recv" id="d1"><div class="bub"><span class="typing"><i></i><i></i><i></i></span>${tail('#E9E9EB')}</div></div>
-      <div class="row recv" id="r2"><div class="bub" id="b2">${RECV1}${tail('#E9E9EB')}</div></div>
-      <div class="gap"></div>
-      <div class="row sent" id="r3"><div class="bub" id="b3">${SENT2}${tail('#1B86F7')}</div></div>
-      <div class="row recv" id="d2"><div class="bub"><span class="typing"><i></i><i></i><i></i></span>${tail('#E9E9EB')}</div></div>
-      <div class="row recv" id="r4"><div class="bub" id="b4">${RECV2}${tail('#E9E9EB')}</div></div>
-      <div class="row recv" id="d3"><div class="bub"><span class="typing"><i></i><i></i><i></i></span>${tail('#E9E9EB')}</div></div>
-      <div class="row recv" id="r5"><div class="bub" id="b5">${RECV3}${tail('#E9E9EB')}</div></div>
+      ${sent('m1', SENT1)}
+      ${item('d1meta', `<div class="meta">Delivered</div>`)}
+      ${dots('t1')}
+      ${item('c1', `<div class="row recv"><div class="card"><div class="ttl">Checked</div>
+        ${step('s1', 'Email + calendar: DL 1234', 'ATL → LAX, your Delta confirmation today')}
+        ${step('s2', 'Landed 3:34 · bag out 4:14', '40 minutes, past the 20-minute guarantee')}
+        ${step('s3', 'Live terms on delta.com', '2,500 SkyMiles · 2-hour window · 1h 18m left')}
+        ${step('s4', 'Profile: Jordan · ••••4567', 'SkyMiles number and contact details')}
+      </div></div>`)}
+      ${item('c2', `<div class="row recv"><div class="card"><div class="ttl">Ready to file</div>
+        <div class="line">DL 1234 · ATL → LAX · STFORB<small>Jordan Lee · one request</small></div>
+        <div class="q">Confirm the bag took over 20 minutes and I’ll file for <b>2,500 SkyMiles</b>?</div>
+      </div></div>`)}
+      ${sent('m2', SENT2)}
+      ${item('d2meta', `<div class="meta">Delivered</div>`)}
+      ${dots('t2')}
+      ${item('c3', `<div class="row recv"><div class="card"><div class="ttl">Filing</div>
+        ${step('s5', 'Filling Delta’s form on delta.com', 'One request, for Jordan')}
+      </div></div>`)}
+      ${recv('m3', 'Submitted. Delta says <b>“Claim Successful.”</b> 2,500 SkyMiles should post in a few days.')}
     </div>
     <div class="inbar"><div class="plus"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
-      <div class="field" id="field"><span class="ph" id="ph">iMessage</span><span id="typed"></span><span class="mic" id="mic">${micIcon}</span><span class="send hide" id="sendBtn">${sendIcon}</span></div></div>
+      <div class="field" id="field"><span class="ph" id="ph">Message</span><span id="typed"></span><span class="mic" id="mic">${micIcon}</span><span class="send hide" id="sendBtn">${sendIcon}</span></div></div>
     <div class="home"><i></i></div>
   </div></div>`;
 }
 
-// ---------- copy per theme ----------
-const FOOT = `<div class="foot"><span><b>github.com/thisiszinger/delta-bags-skill</b></span><span>Illustrative conversation · Not affiliated with Delta</span></div>`;
-const WORKS = () => `<div class="works"><div class="lbl">Bring your own agent</div><div class="logos">${logosHTML()}</div></div>`;
-function copyNavy(k){
-  const s = k==='og' ? {h1:76, sub:24} : k==='split' ? {h1:96, sub:30} : {h1:84, sub:28};
+function copyHTML(k){
+  const og = k==='og', sp = k==='split';
+  const s = og ? {h1:72, big:36, from:28, sub:20, lh:27, mh:32, slot:54, cap:12, g1:16, g2:16, g3:8, g4:24, g5:12, g6:24, qr:98, u1:16, u2:14}
+          : sp ? {h1:100, big:50, from:36, sub:26, lh:35, mh:44, slot:80, cap:15, g1:72, g2:32, g3:14, g4:56, g5:20, g6:36, qr:130, u1:20, u2:17}
+          :      {h1:88, big:44, from:32, sub:23, lh:31, mh:40, slot:72, cap:14, g1:64, g2:28, g3:12, g4:48, g5:18, g6:32, qr:123, u1:18, u2:16};
   return `<div class="brand">${tagSVG}<div>Delta Bags<small>Open-source agent skill</small></div></div>
-    <h1 style="font-size:${s.h1}px">Late bag?<br>Text your agent.</h1>
-    <p class="sub" style="font-size:${s.sub}px;max-width:${k==='og'?700:820}px;margin-top:22px"><b>2,500 SkyMiles</b> for a checked bag that takes over 20 minutes.<br>Your agent handles the form.</p>
-    ${WORKS()}${FOOT}`;
+    <h1 style="font-size:${s.h1}px;margin-top:${s.g1}px">Late bag?<br>Text your agent.</h1>
+    <div class="reward" style="margin-top:${s.g2}px"><div class="big" style="font-size:${s.big}px">2,500 SkyMiles <span style="font-size:${s.from}px">from Delta</span></div>
+      <div class="sub" style="font-size:${s.sub}px;line-height:${s.lh}px;margin-top:${s.g3}px">For eligible checked bags delayed over 20 minutes.<br>Your agent checks the rules and files the request.</div></div>
+    <div class="works" style="margin-top:${s.g4}px;--mh:${s.mh}px;--slot:${s.slot}px;--cap:${s.cap}px"><div class="lbl" style="font-size:${s.cap+2}px;margin-bottom:${s.g5}px">Works with the agent you already have</div>
+      <div class="marks">${LOGOS.map(l=>`<div class="mark"><div class="box"><img src="${l.src}" class="${l.raw?'raw':''}" style="${l.h?`height:${Math.round(l.h*100)}%`:''}"></div><span>${l.name}</span></div>`).join('')}</div></div>
+    <div class="foot" style="margin-top:${s.g6}px"><div class="qr" style="width:${s.qr}px;height:${s.qr}px">${QR_SRC}</div><div><div class="u1" style="font-size:${s.u1}px">github.com/thisiszinger/delta-bags-skill</div><div class="u2" style="font-size:${s.u2}px">Scan, or tell your agent to install it from the link.</div><div class="u2" style="font-size:${s.u2}px">Illustrative conversation · Not affiliated with Delta</div></div></div>`;
 }
-function copyLight(k){
-  const s = k==='og' ? {h1:92, sub:24} : k==='split' ? {h1:128, sub:32} : {h1:116, sub:28};
-  return `<div class="brand">Delta Bags<small>Open-source agent skill</small></div>
-    <h1 style="font-size:${s.h1}px">Late bag?<br><span>Text your agent.</span></h1>
-    <p class="sub" style="font-size:${s.sub}px;margin-top:20px">It files your Delta bag guarantee request.</p>
-    <div class="fact"><b>2,500 SkyMiles</b><span>For eligible checked bags delayed over 20 minutes.</span></div>
-    ${WORKS()}${FOOT}`;
-}
-function copyMiles(k){
-  const n = k==='og' ? 140 : k==='split' ? 210 : 180;
-  return `<div class="brand"><span>Delta Bags</span><small>Open-source agent skill</small></div>
-    <div class="lead">A late Delta bag could mean</div>
-    <div class="num" style="font-size:${n}px">2,500</div>
-    <div class="unit">SkyMiles.</div>
-    <div class="sub">Text your agent. It submits the request.</div>
-    <div class="qual">For eligible checked bags delayed over 20 minutes.</div>
-    ${WORKS()}${FOOT}`;
-}
-const COPY = {navy:copyNavy, light:copyLight, miles:copyMiles}[THEME];
 
-// ---------- layouts ----------
+// ---------- layout ----------
 const stage = document.getElementById('stage');
-stage.classList.add('t-'+THEME);
 stage.style.width = W+'px'; stage.style.height = H+'px';
-if (LAYOUT==='launch'||LAYOUT==='og') stage.classList.add('top');
-if (LAYOUT==='og') stage.classList.add('og');
-if (LAYOUT==='og') stage.style.cssText += ';--ls:60px;--lw:74px;--lg:16px';
-const cam = (x,y,s=1) => `<div class="cam" id="cam" style="left:${x}px;top:${y}px;width:421px;height:880px;transform-origin:0 0;transform:scale(${s})">${phoneHTML()}</div>`;
-const chrome = () => THEME==='light' ? `<div class="panel" id="panel"></div>` : '';
-let html = chrome();
-if (THEME==='miles'){ // phone left, copy right
-  if (LAYOUT==='launch')      html += cam(96,84,1.02) + `<div class="copy" style="left:620px;top:64px;bottom:60px;width:880px">${COPY('launch')}</div>`;
-  else if (LAYOUT==='og')     html += cam(64,44,0.86)  + `<div class="copy" style="left:460px;top:44px;bottom:44px;width:750px">${COPY('og')}</div>`;
-  else if (LAYOUT==='split')  html += cam(170,100)    + `<div class="copy" style="left:760px;top:96px;bottom:96px;width:1040px">${COPY('split')}</div><div class="fade" id="fade"></div>`;
-} else {
-  if (LAYOUT==='launch')      html += `<div class="copy" style="left:84px;top:64px;bottom:60px;width:880px">${COPY('launch')}</div>` + cam(1096,84,1.02);
-  else if (LAYOUT==='og')     html += `<div class="copy" style="left:60px;top:48px;bottom:44px;width:${THEME==='light'?710:740}px">${COPY('og')}</div>` + cam(856,44,0.86);
-  else if (LAYOUT==='split')  html += `<div class="copy" style="left:120px;top:100px;bottom:96px;width:1040px">${COPY('split')}</div>` + cam(1290,100) + `<div class="fade" id="fade"></div>`;
-}
-if (LAYOUT==='phone') html = cam((W-421)/2,(H-880)/2) + `<div class="caption" style="left:0;right:0;bottom:36px;text-align:center">Illustrative conversation · Delta Bags · github.com/thisiszinger/delta-bags-skill</div><div class="fade" id="fade"></div>`;
+const STILL = LAYOUT==='launch' || LAYOUT==='og';
+if (STILL) stage.classList.add('still');
+const cam = (x,y,s=1) => `<div class="cam" id="cam" style="left:${x}px;top:${y}px;width:421px;height:861px;transform:scale(${s})">${phoneHTML()}</div>`;
+const lug = (x,y,w,h) => NOLUG ? '' : `<div class="lug" id="lug" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px"></div>`;
+let html = '';
+if (LAYOUT==='launch')      html = `<div class="copy" style="left:96px;top:64px;width:900px">${copyHTML('launch')}</div>` + lug(770,540,400,340) + cam(1150,72,0.95);
+else if (LAYOUT==='og')     html = `<div class="copy" style="left:64px;top:44px;width:760px">${copyHTML('og')}</div>` + lug(690,420,280,230) + cam(910,44,0.8);
+else if (LAYOUT==='split')  html = `<div class="copy" style="left:120px;top:96px;width:1040px">${copyHTML('split')}</div>` + lug(820,700,460,380) + cam(1300,100,1.0) + `<div class="fade" id="fade"></div>`;
+else if (LAYOUT==='phone')  html = lug(430,660,460,380) + cam((W-421)/2,(H-861)/2,1.0) + `<div class="caption" style="left:0;right:0;bottom:34px;text-align:center">Illustrative conversation · Delta Bags · github.com/thisiszinger/delta-bags-skill</div><div class="fade" id="fade"></div>`;
 stage.innerHTML = html;
-if (THEME==='light'){
-  const p=document.getElementById('panel');
-  if(p){ p.style.width = (LAYOUT==='launch'? W-1000 : LAYOUT==='og'? W-820 : LAYOUT==='split'? W-1200 : 0)+'px'; }
-  if (LAYOUT==='phone'){ stage.style.background='#003268'; }
-}
-{ const f=document.getElementById('fade'); if(f) f.style.background = getComputedStyle(stage).backgroundColor; }
-
-// ---------- seek(t) ----------
 const $ = id => document.getElementById(id);
+
+let LUG = null;
+if ($('lug')) { const r = $('lug').getBoundingClientRect(); LUG = await createLuggage($('lug'), { width: Math.round(r.width), height: Math.round(r.height), dpr: STILL ? 2 : 1 }); }
+
+// ---------- animation engine ----------
 const ease = x => x<0?0:x>1?1:(x<.5 ? 4*x*x*x : 1-Math.pow(-2*x+2,3)/2);
-const easeOutBack = x => { const c1=1.70158, c3=c1+1; return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2); };
-function pop(el, t0, t){
-  if (t < t0){ el.classList.add('hide'); return; }
-  el.classList.remove('hide');
-  const p = Math.min(1,(t-t0)/0.32), s = 0.6 + 0.4*easeOutBack(p), b = el.querySelector('.bub');
-  b.style.transform = `scale(${s.toFixed(4)})`; b.style.opacity = Math.min(1,p*2.5).toFixed(3);
+const outCubic = x => x<0?0:x>1?1:1-Math.pow(1-x,3);
+const ITEMS = [...document.querySelectorAll('.item')];
+const NAT = new Map();
+function measure(){
+  ITEMS.forEach(el=>{ el.style.height=''; el.style.display=''; el.firstElementChild.style.opacity=''; el.firstElementChild.style.transform=''; });
+  ITEMS.forEach(el=>NAT.set(el, el.offsetHeight));
 }
-function dots(el, span, t){
-  if (t<span[0] || t>=span[1]){ el.classList.add('hide'); return; }
-  el.classList.remove('hide');
-  const p = Math.min(1,(t-span[0])/0.25), s = 0.6+0.4*easeOutBack(p), b = el.querySelector('.bub');
-  b.style.transform = `scale(${s.toFixed(4)})`; b.style.opacity = Math.min(1,p*3).toFixed(3);
-  el.querySelectorAll('.typing i').forEach((d,i)=>{
-    const ph = (t*2.2 - i*0.22) % 1, k = Math.max(0, Math.sin(ph*Math.PI*2));
-    d.style.transform = `translateY(${(-k*3.5).toFixed(2)}px)`; d.style.opacity = (0.45+0.55*k).toFixed(2);
-  });
+measure();
+function show(el, t0, t, t1=Infinity){
+  const inner = el.firstElementChild;
+  if (t < t0 || t > t1 + 0.26){ el.style.display='none'; return; }
+  el.style.display='';
+  let p, o;
+  if (t <= t1){ p = outCubic((t - t0)/0.32); o = Math.min(1, (t - t0)/0.16); }
+  else { p = 1 - outCubic((t - t1)/0.26); o = p; }
+  const h = NAT.get(el);
+  el.style.height = (p >= 1 ? h : h*p) + 'px';
+  inner.style.opacity = Math.max(0, Math.min(1, o)).toFixed(3);
+  inner.style.transform = `translateY(${((1-p)*6).toFixed(2)}px)`;
 }
-function typing(span, text, t, sentAt){
-  let shown = '';
-  if (t>=span[0] && t<sentAt){ const p = Math.min(1,(t-span[0])/(span[1]-span[0])); shown = text.slice(0, Math.round(p*text.length)); }
-  $('typed').textContent = shown;
-  $('ph').classList.toggle('hide', shown.length>0); $('mic').classList.toggle('hide', shown.length>0); $('sendBtn').classList.toggle('hide', shown.length===0);
+function stepState(id, tStart, tDone, t){
+  const i = $(id+'i'); if (!i) return;
+  if (t >= tDone){ i.className='ok'; i.innerHTML = tick; i.style.transform=''; }
+  else { i.className='run'; i.innerHTML=''; i.style.transform = `rotate(${((t - tStart)*360)%360}deg)`; }
 }
-function focus(id){
-  const c = $('cam'); const saved = c.style.transform; c.style.transform='none';
-  const c0 = c.getBoundingClientRect(); let pt = [210, 440];
-  if (id){ const r = $(id).getBoundingClientRect(); pt = [r.left + r.width/2 - c0.left, r.top + r.height/2 - c0.top]; }
-  c.style.transform = saved; return pt;
+function typingDots(el, t){
+  el.querySelectorAll('.typing i').forEach((d,i)=>{ const ph=((t*1.6 - i*0.18)%1+1)%1; d.style.opacity=(0.35+0.65*Math.max(0,Math.sin(ph*Math.PI*2))).toFixed(2); });
+}
+function composer(span, text, t, sentAt){
+  let shown=''; if (t>=span[0] && t<sentAt){ const p=Math.min(1,(t-span[0])/(span[1]-span[0])); shown=text.slice(0, Math.round(p*text.length)); }
+  $('typed').textContent=shown; $('ph').classList.toggle('hide',shown.length>0); $('mic').classList.toggle('hide',shown.length>0); $('sendBtn').classList.toggle('hide',shown.length===0);
+}
+
+// camera keyframes: z = zoom, f = element to center (explicit cards only). Zoom transitions take 0.9 s.
+const ZMAX = LAYOUT==='phone' ? 1.4 : 1.32;
+const CAMS = {
+  split:[{t:0,z:1,f:null},{t:2.6,z:1,f:null},{t:3.5,z:ZMAX,f:'c1'},{t:7.8,z:ZMAX,f:'c1'},{t:8.7,z:ZMAX,f:'c2'},
+         {t:11.2,z:ZMAX,f:'c2'},{t:12.1,z:ZMAX,f:'c3'},{t:13.3,z:ZMAX,f:'c3'},{t:14.2,z:ZMAX,f:'m3'},{t:17.3,z:ZMAX,f:'m3'},{t:18.2,z:1,f:null}],
+  phone:[{t:0,z:1.12,f:null},{t:2.6,z:1.12,f:null},{t:3.5,z:ZMAX,f:'c1'},{t:7.8,z:ZMAX,f:'c1'},{t:8.7,z:ZMAX,f:'c2'},
+         {t:11.2,z:ZMAX,f:'c2'},{t:12.1,z:ZMAX,f:'c3'},{t:13.3,z:ZMAX,f:'c3'},{t:14.2,z:ZMAX,f:'m3'},{t:17.3,z:ZMAX,f:'m3'},{t:18.2,z:1.12,f:null}],
+  launch:[{t:0,z:1,f:null}], og:[{t:0,z:1,f:null}],
+};
+function focusPoint(f){
+  const c=$('cam'); const saved=c.style.transform; c.style.transform='none'; const c0=c.getBoundingClientRect();
+  let pt=[210.5, 430];
+  const el = f ? $(f) : null;
+  if (el && el.style.display!=='none'){ const r=el.getBoundingClientRect(); pt=[210.5, r.top + r.height/2 - c0.top]; }
+  else if (el){ pt=[210.5, 700]; }
+  c.style.transform=saved; return pt;
 }
 function camera(t){
-  const c = $('cam'); const kf = CAMS[LAYOUT]; if (!c || kf.length<2) return;
-  let a = kf[0], b = kf[kf.length-1];
+  const c=$('cam'); const kf=CAMS[LAYOUT]; if(!c||kf.length<2) return;
+  let a=kf[0], b=kf[kf.length-1];
   for (let i=0;i<kf.length-1;i++){ if (t>=kf[i].t && t<=kf[i+1].t){ a=kf[i]; b=kf[i+1]; break; } }
   if (t>b.t) a=b;
   const p = a===b ? 1 : ease((t-a.t)/(b.t-a.t));
-  const fa = focus(a.f), fb = focus(b.f), s = a.s + (b.s-a.s)*p;
-  const fx = fa[0] + (fb[0]-fa[0])*p, fy = fa[1] + (fb[1]-fa[1])*p;
-  c.style.transform = `translate(${((1-s)*fx).toFixed(2)}px, ${((1-s)*fy).toFixed(2)}px) scale(${s.toFixed(4)})`;
+  const fa=focusPoint(a.f), fb=focusPoint(b.f);
+  const z = a.z+(b.z-a.z)*p;
+  let fy = fa[1]+(fb[1]-fa[1])*p;
+  const camTop = parseFloat(c.style.top);
+  const viewH = H / z;
+  fy = Math.max(viewH/2 - 30, Math.min(fy, 861 - viewH/2 + 30));
+  const k = Math.max(0, Math.min(1, (z - 1) / 0.12));
+  const dyZoom = H/2 - (camTop + fy*z);
+  const dyRest = camTop - camTop*z;
+  const dy = dyRest + (dyZoom - dyRest) * k;
+  const dx = 210.5 - 210.5*z;
+  c.style.transform = `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px) scale(${z.toFixed(4)})`;
 }
+
 window.seek = function(t){
   t = Math.max(0, Math.min(DURATION, t));
-  const still = (LAYOUT==='launch' || LAYOUT==='og');
-  if (still) t = T.fadeOut-0.1;
-  typing(T.type1, SENT1, t, T.send1);
-  if (t>=T.type2[0]) typing(T.type2, SENT2, t, T.send2);
-  pop($('r1'), T.send1, t); dots($('d1'), T.dots1, t); pop($('r2'), T.recv1, t);
-  pop($('r3'), T.send2, t); dots($('d2'), T.dots2, t); pop($('r4'), T.recv2, t);
-  dots($('d3'), T.dots3, t); pop($('r5'), T.recv3, t);
-  const m = $('m1');
-  if (t>=T.send2+0.4){ $('r3').insertAdjacentElement('afterend', m); m.classList.remove('hide'); }
-  else { $('r1').insertAdjacentElement('afterend', m); m.classList.toggle('hide', t<T.deliv1); }
-  if (!still) camera(t);
-  const fade = $('fade');
-  if (fade){ let o=0; if (t<0.5) o = 1-t/0.5; else if (t>T.fadeOut) o = (t-T.fadeOut)/(DURATION-T.fadeOut); fade.style.opacity = Math.max(0,Math.min(1,o)).toFixed(3); }
+  if (STILL) t = T.hold - 0.2;
+  composer(T.type1, SENT1, t, T.send1);
+  if (t>=T.type2[0]) composer(T.type2, SENT2, t, T.send2);
+  const never = Infinity;
+  show($('m1'), T.send1, t);
+  show($('d1meta'), STILL ? never : T.deliv1, t, T.send2+0.3);
+  show($('t1'), STILL ? never : T.dots1[0], t, T.dots1[1]-0.26); typingDots($('t1'), t);
+  show($('c1'), T.card1, t);
+  show($('s1'), T.s1, t);   stepState('s1', T.s1, T.s1ok, t);
+  show($('s2'), T.s2, t);   stepState('s2', T.s2, T.s2+0.35, t);
+  show($('s3'), T.s3, t);   stepState('s3', T.s3, T.s3+0.45, t);
+  show($('s4'), T.s4, t);   stepState('s4', T.s4, T.s4+0.35, t);
+  show($('c2'), T.card2, t);
+  show($('m2'), T.send2, t);
+  show($('d2meta'), STILL ? never : T.send2+0.4, t);
+  show($('t2'), STILL ? never : T.dots2[0], t, T.dots2[1]-0.26); typingDots($('t2'), t);
+  show($('c3'), STILL ? never : T.card3, t);
+  show($('s5'), T.card3, t); stepState('s5', T.card3, T.s5ok, t);
+  show($('m3'), T.final, t);
+  if (!STILL) camera(t);
+  if (LUG){ LUG.seek(STILL ? 10 : Math.max(0, t - T.lug)); LUG.render(); }
+  const fade=$('fade');
+  if (fade){ let o=0; if (t<0.4) o=1-t/0.4; else if (t>T.hold) o=(t-T.hold)/(DURATION-T.hold); fade.style.opacity=Math.max(0,Math.min(1,o)).toFixed(3); }
   return t;
 };
 window.DURATION = DURATION;
-window.ready = document.fonts.ready.then(()=>new Promise(r=>setTimeout(r,150))).then(()=>{ seek(Number(Q.get('t')||0)); return true; });
+await document.fonts.ready; await new Promise(r=>setTimeout(r,150)); measure();
+seek(Number(Q.get('t')||0)); window.ready = true;
 </script>
 </body>
 </html>

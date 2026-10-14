@@ -14,3 +14,4 @@ submissions.json
 
 # Local render tooling for assets/src (npm install there); not part of the skill.
 /assets/src/node_modules/
+/assets/src/frame.png
